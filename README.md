@@ -7,6 +7,13 @@ A personal second-brain app in the Neural Night design: notes, tasks with due da
 - **Android app:** download [second-brain.apk](https://github.com/khalil203/second-brain/raw/main/dist/second-brain.apk) and open it (allow "Install unknown apps" for your browser when asked).
 - **Web app:** open https://khalil203.github.io/second-brain/ in Chrome, then menu ⋮ → **Install app**.
 
+## Brain AI and Imagine
+
+Open-source models that run on the phone, no AI company involved:
+
+- **Brain AI** uses [Transformers.js](https://github.com/huggingface/transformers.js) with `Xenova/multilingual-e5-small` (Thai, English, French, Arabic) or `Xenova/all-MiniLM-L6-v2` (English) for search by meaning, similar notes, auto-organizing the inbox, summaries and semantic links in the Brain map. Text from photos uses [Tesseract.js](https://github.com/naptha/tesseract.js). Models download once and then work offline.
+- **Imagine** creates images with the open [FLUX.1-schnell](https://huggingface.co/black-forest-labs/FLUX.1-schnell) model through Hugging Face, using a free Hugging Face key, or the free public FLUX Space when it has free time left.
+
 ## Converter
 
 The Convert tool (Home → Convert, or Discover) changes files on the device: images (JPG, PNG, WEBP, PDF), PDF (JPG, PNG, TXT), video and audio via ffmpeg.wasm (MP4, MP3, GIF, WEBM, M4A, WAV, OGG), spreadsheets via SheetJS, Word via mammoth. The donut format picker is inspired by [Filee](https://github.com/KnifeLemon/Filee) (MIT, © Myeonggu Kim). The desktop version is [Second Brain Convert](https://github.com/khalil203/second-brain-convert).

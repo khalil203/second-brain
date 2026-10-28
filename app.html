@@ -388,6 +388,31 @@ input[type=range]{padding:0;border:0;box-shadow:none;accent-color:var(--acc);bac
 .map-card p{margin:0;color:var(--mut);font-size:13.5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .map-card .row{margin:10px 0 0}
 .map-stats{font-size:11.5px;color:var(--faint);font-weight:650;pointer-events:none;padding:0 4px}
+
+/* ================= Brain AI + Imagine ================= */
+#editor{z-index:11}
+.qa{grid-template-columns:repeat(3,1fr)}
+.askai{display:block;margin:-2px 2px 8px;font-size:13.5px}
+.match{color:var(--acc);font-weight:750}
+.ai-hero{display:flex;gap:14px;align-items:center;padding:16px;border-radius:22px}
+.ai-hero b{display:block;font-size:22px;font-weight:850;letter-spacing:-.03em}
+.ai-hero span{color:var(--mut);font-size:13.5px;line-height:1.4}
+.orb-ai{width:58px;height:58px;flex:none;border-radius:20px;background:var(--grad);position:relative;box-shadow:var(--glow);overflow:hidden}
+.orb-ai::before,.orb-ai::after{content:"";position:absolute;inset:9px;border-radius:50%;border:2px solid rgba(255,255,255,.75);animation:spin 3.2s linear infinite}
+.orb-ai::after{inset:14px 6px;animation-duration:5s;animation-direction:reverse;border-color:rgba(255,255,255,.45)}
+.orb-ai i{position:absolute;inset:24px;border-radius:50%;background:#fff;box-shadow:0 0 14px #fff}
+.tools{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tool{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;padding:14px;border-radius:20px;cursor:pointer;font:inherit;color:var(--ink);min-height:132px}
+.tool i{font-style:normal;font-size:22px;width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:var(--gradSoft);margin-bottom:6px}
+.tool b{font-size:14.5px}
+.tool small{color:var(--mut);font-size:12px;line-height:1.35}
+#imgPrompt{min-height:96px;resize:vertical;font-size:16px}
+.img-out{margin:14px 0 0;border-radius:22px;overflow:hidden;border:1px solid transparent;background:linear-gradient(var(--solid),var(--solid)) padding-box,var(--edge) border-box;box-shadow:var(--sh2)}
+.img-out.skel{aspect-ratio:1;border-radius:22px}
+.img-out img{display:block;width:100%;height:auto;animation:fade .5s var(--ease)}
+.img-out figcaption{font-size:11.5px;color:var(--faint);padding:8px 12px;font-weight:650}
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.gallery img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;cursor:pointer;background:var(--line)}
 </style>
 </head>
 <body>
@@ -438,6 +463,7 @@ input[type=range]{padding:0;border:0;box-shadow:none;accent-color:var(--acc);bac
     <div id="ePrev" class="prev"></div>
     <div id="ePreview"></div>
     <div id="eFiles"></div>
+    <div id="eAI"></div>
     <div id="eBack"></div>
     <div class="small" id="eMeta"></div>
   </div>
@@ -453,6 +479,17 @@ input[type=range]{padding:0;border:0;box-shadow:none;accent-color:var(--acc);bac
 <div class="sheet" id="me">
   <div class="sh-top"><button class="ib flat" data-act="closeMe" aria-label="Back">←</button><b>Account &amp; settings</b><span style="width:42px"></span></div>
   <div class="sh-body" id="meBody"></div>
+</div>
+<!-- brain AI -->
+<div class="sheet" id="aiSheet">
+  <div class="sh-top"><button class="ib flat" data-act="closeAI" aria-label="Back">←</button><b>Brain AI</b><span style="width:42px"></span></div>
+  <div class="sh-body" id="aiBody"></div>
+  <input type="file" id="aiOcrPick" accept="image/*" multiple hidden>
+</div>
+<!-- imagine -->
+<div class="sheet" id="imagine">
+  <div class="sh-top"><button class="ib flat" data-act="closeImg" aria-label="Back">←</button><b>Imagine</b><span style="width:42px"></span></div>
+  <div class="sh-body" id="imgBody"></div>
 </div>
 <!-- brain map -->
 <div class="sheet" id="map">
@@ -472,7 +509,7 @@ input[type=range]{padding:0;border:0;box-shadow:none;accent-color:var(--acc);bac
 <div class="toast" id="toast"><span></span><button></button></div>
 
 <script>
-const APP_VERSION = '5.0.0';
+const APP_VERSION = '5.1.0';
 const REPO = 'khalil203/second-brain', RAW = `https://raw.githubusercontent.com/${REPO}/main/`, APK_URL = `https://github.com/${REPO}/raw/main/dist/second-brain.apk`;
 const SB_URL = 'https://kshhznqxudcaipizpxvv.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzaGh6bnF4dWRjYWlwaXpweHZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMxNzYwODYsImV4cCI6MjEwODc1MjA4Nn0._6bQRQh3jDap48iw_tfNnfGAkOPlWYeU4wHm_4BFmzU';
@@ -490,7 +527,7 @@ const FEEDS = [{name:'World', url:'https://feeds.bbci.co.uk/news/world/rss.xml'}
 const CURR = ['THB','USD','EUR','TND','GBP','JPY','CNY','SGD','MYR','AED','AUD'];
 
 let db = {notes:[], files:{}, cache:{},
-  settings:{name:'Second Brain', theme:'dark', accent:'neural', v5:1, lastExport:0, init:0, autoUpdate:true, lastCheck:0, city:'Bangkok', feeds:FEEDS, wikiLang:'en', fx:{amt:100, from:'USD', to:'THB'}, autoBackup:true, view:'list', sort:'recent'},
+  settings:{name:'Second Brain', theme:'dark', accent:'neural', v5:1, lastExport:0, init:0, autoUpdate:true, lastCheck:0, city:'Bangkok', feeds:FEEDS, wikiLang:'en', fx:{amt:100, from:'USD', to:'THB'}, autoBackup:true, view:'list', sort:'recent', ai:{model:'', ocr:'eng+tha', hfToken:'', mapLinks:true}},
   cloud:{session:null, dirty:[], lastPull:'1970-01-01T00:00:00Z', lastSync:0, lastBackup:0, error:''}};
 let ui = {tab:'home', para:'all', tag:null, q:'', newsTab:0, anim:true, wikiQ:'', wiki:null, capType:'note', capPara:'inbox', capDue:'', capFiles:[]};
 let cur = null, editMode = false;
@@ -511,12 +548,14 @@ function save(){ clearTimeout(saveTimer); saveTimer = setTimeout(flush, 250); }
 async function flush(){ clearTimeout(saveTimer); try{ await Store.set('db', JSON.parse(JSON.stringify(db))); }catch(e){ toast('⚠️ Could not save — export a backup'); } }
 async function load(){
   await Store.init();
+  try{ EMB = (await Store.get('emb')) || {}; }catch(e){ EMB = {}; }
   let d = null; try{ d = await Store.get('db'); }catch(e){}
   if(!d){ try{ const r = localStorage.getItem('secondbrain.v1'); if(r) d = JSON.parse(r); }catch(e){} }
   if(d){
     db.notes = d.notes || []; db.files = d.files || {}; db.cache = d.cache || {};
     Object.assign(db.settings, d.settings || {}); Object.assign(db.cloud, d.cloud || {});
     ['apiKey','model','learn'].forEach(k => delete db.settings[k]);
+    db.settings.ai = Object.assign({model:'', ocr:'eng+tha', hfToken:'', mapLinks:true}, (d.settings || {}).ai || {});
   }
   if(!Array.isArray(db.settings.feeds) || !db.settings.feeds.length) db.settings.feeds = FEEDS;
   if(!db.settings.v5){ if(db.settings.accent==='mint') db.settings.accent = 'neural'; if(db.settings.theme==='auto') db.settings.theme = 'dark'; db.settings.v5 = 1; }
@@ -543,9 +582,15 @@ function toast(m, action, fn){
   b.textContent = action || ''; b.classList.toggle('hide', !action); b.onclick = () => { t.classList.remove('show'); fn && fn(); };
   t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), action ? 4500 : 2600);
 }
+function withTags(body, tags){
+  const have = new Set([...(' ' + (body||'')).matchAll(TAGRE)].map(m => m[2].toLowerCase()));
+  const add = (tags||[]).map(t => String(t).replace(/^#/,'').trim().toLowerCase().replace(/\s+/g,'-')).filter(t => t && !have.has(t));
+  return add.length ? ((body||'').trim() ? body.trimEnd() + '\n\n' : '') + add.map(t => '#' + t).join(' ') : body;
+}
 function allTags(){ const m={}; db.notes.forEach(n => tagsOf(n).forEach(t => m[t]=(m[t]||0)+1)); return Object.entries(m).sort((a,b)=>b[1]-a[1]); }
 function markDirty(id){ if(!db.cloud.dirty.includes(id)) db.cloud.dirty.push(id); }
-function changed(n){ n.updated = Date.now(); markDirty(n.id); save(); Cloud.soon(); }
+let aiT; const aiSoon = () => { if(typeof AI!=='undefined' && AI.on()){ clearTimeout(aiT); aiT = setTimeout(() => AI.index().catch(()=>{}), 4000); } };
+function changed(n){ n.updated = Date.now(); markDirty(n.id); save(); Cloud.soon(); aiSoon(); }
 function newNote(o={}){ const n = Object.assign({id:uid(),title:'',body:'',type:'note',para:'inbox',pinned:false,done:false,due:'',files:[],created:Date.now(),updated:Date.now()}, o); db.notes.unshift(n); markDirty(n.id); save(); Cloud.soon(); return n; }
 function removeNote(n){
   db.notes = db.notes.filter(x => x!==n); markDirty(n.id);
@@ -869,6 +914,19 @@ function countUp(root){
     const step = now => { const k = Math.min(1, (now-t0)/800), e = 1 - Math.pow(1-k, 3); el.textContent = Math.round(to*e); if(k < 1) requestAnimationFrame(step); }; requestAnimationFrame(step); });
 }
 
+async function noteSummarize(n){
+  if(!(await AI.choose())) return;
+  try{ aiStatus('Summarizing…'); toast('✨ Summarizing…'); const s = await AI.summarize(n.body); aiStatus('');
+    if(!s){ toast('This note is already short'); return; }
+    n.body = '**Summary**\n' + s.map(x => '- ' + x).join('\n') + '\n\n' + n.body; changed(n); if(cur===n) showEditor(); render(); haptic('success'); toast('✨ Summary added at the top');
+  }catch(e){ aiStatus(''); toast(e.message); }
+}
+async function noteOcr(n){
+  const files = [];
+  for(const id of n.files || []){ const m = db.files[id]; if(!m || !m.type.startsWith('image/')) continue; const u = await fileURL(id); if(u) files.push(await (await fetch(u)).blob()); }
+  toast('📷 Reading text…'); await aiOcrFiles(files, n);
+}
+
 /* ================= rendering ================= */
 const greet = () => { const h = new Date().getHours(); return h<5 ? 'Late night' : h<12 ? 'Good morning' : h<17 ? 'Good afternoon' : h<22 ? 'Good evening' : 'Good night'; };
 const initial = () => { const u = Cloud.user(); return u ? u.email[0].toUpperCase() : '☺'; };
@@ -929,7 +987,7 @@ function renderHome(){
   else h += `<div class="focus glass"><span class="lbl">⚡ Focus now</span><h3>All clear. Capture a new idea?</h3><div class="row"><button class="btn grad sm" data-act="capture">＋ Capture</button></div></div>`;
   const wk = weekCounts(), max = Math.max(1, ...wk.map(d => d.n)), st = streak(), total = wk.reduce((a,d)=>a+d.n,0);
   h += `<div class="insight glass"><div class="streak">${st?'<i>🔥</i>':''}<b data-count="${st}">${st}</b><span>day streak</span></div><div><div class="week">${wk.map((d,i)=>`<div><i class="${d.n?'on':''} ${i===6?'today':''}" style="height:${Math.max(8, d.n/max*64)}px;--i:${i}"></i><span>${esc(d.l)}</span></div>`).join('')}</div><small>${total} note${total===1?'':'s'} touched this week</small></div></div>`;
-  h += `<div class="qa"><button data-act="today"><i>📔</i>Journal</button><button data-act="newTask"><i>✅</i>Task</button><button data-act="openMap"><i>🧠</i>Brain map</button><button data-act="convert"><i>⇄</i>Convert</button></div>`;
+  h += `<div class="qa"><button data-act="today"><i>📔</i>Journal</button><button data-act="newTask"><i>✅</i>Task</button><button data-act="aiOpen"><i>✨</i>Ask AI</button><button data-act="imagine"><i>🎨</i>Imagine</button><button data-act="openMap"><i>🧠</i>Brain map</button><button data-act="convert"><i>⇄</i>Convert</button></div>`;
   h += `<div class="sec"><h2>Today</h2><a data-go="tasks">All tasks</a></div>` + (todo.length ? list(todo) : `<div class="panel mut" style="text-align:center">✨ Nothing due. Tap ＋ to add a task.</div>`);
   const rs = resurfaceNote();
   if(rs) h += `<div class="resurface glass" data-open="${rs.id}"><span class="ri">💭</span><span><small>From your brain · ${ago(rs.updated)}</small><b>${esc(rs.title||'Untitled')}</b></span></div>`;
@@ -950,6 +1008,7 @@ function renderLibrary(){
   const counts = k => k==='all' ? db.notes.filter(n=>n.para!=='archive').length : k==='journal' ? db.notes.filter(n=>n.type==='journal').length : db.notes.filter(n=>n.para===k && (k==='archive'||n.type!=='journal')).length;
   let h = topbar('Notes', '', `<button class="ib" data-act="openMap" aria-label="Brain map">🧠</button>` + meBtn());
   h += `<div class="search"><input id="libQ" type="search" placeholder="Search notes, tags, links…" value="${esc(ui.q)}" autocomplete="off"></div>`;
+  if(ui.q.trim()) h += `<button class="link askai" data-askai="${esc(ui.q)}">✨ Search by meaning with Brain AI</button>`;
   h += `<div class="chips">${[['all','All'],...PARA.slice(0,4).map(p=>[p[0],p[2]+' '+p[1]]),['journal','📔 Journal'],['archive','🗄️ Archive']].map(([k,l])=>`<button class="chip ${ui.para===k?'on':''}" data-para="${k}">${l}<small>${counts(k)}</small></button>`).join('')}</div>`;
   const tags = allTags();
   if(tags.length) h += `<div class="chips">${tags.slice(0,30).map(([k,c])=>`<button class="chip ${ui.tag===k?'on':''}" data-tag="${esc(k)}">#${esc(k)}<small>${c}</small></button>`).join('')}</div>`;
@@ -981,6 +1040,8 @@ function renderTasks(){
 }
 function renderDiscover(){
   let h = topbar('Discover', navigator.onLine ? 'Live information from the internet' : '⚠️ Offline — showing saved information', meBtn());
+  h += `<button class="panel conv-card" data-act="aiOpen"><span class="cc-i">✨</span><span><b>Brain AI</b><small>Ask by meaning, auto-organize, read text from photos</small></span><span class="cc-go">›</span></button>`;
+  h += `<button class="panel conv-card" data-act="imagine"><span class="cc-i">🎨</span><span><b>Imagine</b><small>Create images from text with open models</small></span><span class="cc-go">›</span></button>`;
   h += `<button class="panel conv-card" data-act="convert"><span class="cc-i">⇄</span><span><b>File converter</b><small>Photos, PDF, video, music, Word, Excel — on your phone</small></span><span class="cc-go">›</span></button>`;
   h += `<form class="search" id="wikiForm"><input id="wikiQ" type="search" placeholder="Search Wikipedia…" value="${esc(ui.wikiQ)}" autocomplete="off" enterkeyhint="search"></form>`;
   if(ui.wiki){
@@ -1093,7 +1154,7 @@ function renderMe(){
 }
 
 /* ================= backup ================= */
-function backupData(withFiles){ return {app:'second-brain', version:4, exported:Date.now(), notes:db.notes, settings:{...db.settings}, filesMeta:db.files}; }
+function backupData(withFiles){ return {app:'second-brain', version:5, exported:Date.now(), notes:db.notes, settings:{...db.settings, ai:{...db.settings.ai, hfToken:''}}, filesMeta:db.files}; }
 async function backupBlob(){
   const out = backupData(true), files = {};
   for(const id of Object.keys(db.files)){ const m = db.files[id]; if(m.size > 25e6) continue; const b = await Store.getFile(id).catch(()=>null); if(b) files[id] = {name:m.name, type:m.type, size:m.size, data:await dataURL(b)}; }
@@ -1129,8 +1190,8 @@ function onClosed(id){
   if(id!=='map' && $('#map').classList.contains('open')){ BrainMap.build(); BrainMap.paintUI(); }
   render();
 }
-addEventListener('popstate', () => ['actSheet','capSheet','conv','editor','map','me'].forEach(id => { if($('#'+id).classList.contains('open')) onClosed(id); }));
-function topOpen(){ return ['actSheet','capSheet','conv','editor','map','me'].find(id => $('#'+id).classList.contains('open')); }
+addEventListener('popstate', () => ['actSheet','capSheet','conv','editor','imagine','aiSheet','map','me'].forEach(id => { if($('#'+id).classList.contains('open')) onClosed(id); }));
+function topOpen(){ return ['actSheet','capSheet','conv','editor','imagine','aiSheet','map','me'].find(id => $('#'+id).classList.contains('open')); }
 
 function actions(title, items){
   $('#actTitle').textContent = title;
@@ -1146,6 +1207,8 @@ function noteActions(id){
     {i:'📂', l:'Move to…', fn:() => pickFrom('Move to', PARA.map(p=>[p[0],p[1],p[2]]), k => { n.para = k; changed(n); render(); toast('Moved to ' + PAR[k].l); })},
     {i:'🏷️', l:'Change type…', fn:() => pickFrom('Type', TYPES.map(t=>[t[0],t[1],t[2]]), k => { n.type = k; changed(n); render(); })},
     ...((n.files||[]).length ? [{i:'⇄', l:'Convert attachments', fn:() => convertNoteFiles(n)}] : []),
+    ...((n.files||[]).some(id => db.files[id] && db.files[id].type.startsWith('image/')) ? [{i:'📷', l:'Read text from photos', fn:() => noteOcr(n)}] : []),
+    ...((n.body||'').length > 300 ? [{i:'✨', l:'Summarize with Brain AI', fn:() => noteSummarize(n)}] : []),
     {i:'📤', l:'Share', fn:() => shareText(n.title, (n.title?n.title+'\n\n':'') + n.body)},
     {i:'⧉', l:'Duplicate', fn:() => { const c = newNote({...JSON.parse(JSON.stringify(n)), id:uid(), title:(n.title||'')+' (copy)', created:Date.now(), updated:Date.now()}); render(); toast('Duplicated', 'Open', () => openNote(c.id)); }},
     {i:'🗑️', l:'Delete', danger:true, fn:() => deleteWithUndo(n)}
@@ -1187,6 +1250,7 @@ function showEditor(){
   if(!editMode) $('#ePrev').innerHTML = `<h1>${esc(cur.title||'Untitled')}</h1>` + (cur.body.trim() ? md(cur.body) : '<p class="mut">Empty note — tap ✏️ to write.</p>');
   $('#ePreview').innerHTML = previewHTML(cur.preview);
   $('#eFiles').innerHTML = filesHTML(cur.files, true); hydrate($('#eFiles'));
+  noteAIExtras(cur);
   const t = (cur.title||'').trim().toLowerCase();
   const bl = t ? db.notes.filter(n => n!==cur && (n.body||'').toLowerCase().includes('[['+t+']]')) : [];
   $('#eBack').innerHTML = bl.length ? `<div class="sec"><h2>Linked from</h2></div>${bl.map((n,i)=>card(n,i)).join('')}` : '';
@@ -1275,6 +1339,18 @@ async function act(a, el){
   else if(a==='closeMe') closeSheet('me');
   else if(a==='convert') openConvert();
   else if(a==='openMap') openMap();
+  else if(a==='aiOpen'){ renderAI(); openSheet('aiSheet'); if(AI.on()) AI.index(true).then(renderAI).catch(e => { aiStatus(''); }); }
+  else if(a==='closeAI') closeSheet('aiSheet');
+  else if(a==='aiOn'){ if(await AI.choose()){ renderAI(); try{ await AI.index(true); toast('✨ Brain AI is ready'); }catch(e){ toast(e.message); aiStatus(''); } renderAI(); } }
+  else if(a==='aiModel'){ db.settings.ai.model = ''; AI.ex = null; save(); if(await AI.choose()){ renderAI(); try{ await AI.index(true); }catch(e){ toast(e.message); aiStatus(''); } } renderAI(); }
+  else if(a==='aiOff'){ if(confirm('Turn off Brain AI and remove its models from this phone?')){ db.settings.ai.model = ''; AI.ex = null; EMB = {}; saveEmb(); save(); try{ for(const k of await caches.keys()) if(/transformers/i.test(k)) await caches.delete(k); }catch(e){} aiResults = null; renderAI(); toast('Brain AI turned off'); } }
+  else if(a==='aiOrganize') aiOrganize();
+  else if(a==='aiOcr') $('#aiOcrPick').click();
+  else if(a==='imagine'){ renderImagine(); openSheet('imagine'); }
+  else if(a==='closeImg') closeSheet('imagine');
+  else if(a==='imgGo') generateImage();
+  else if(a==='imgSave') imgSave();
+  else if(a==='imgShare'){ if(img.last) shareFile('image-' + Date.now() + '.jpg', img.last.blob, 'Share image'); }
   else if(a==='closeMap') closeSheet('map');
   else if(a==='mapReset'){ Object.assign(BrainMap, {yaw:0, pitch:.25, zoom:1, heat:1}); BrainMap.select(null); }
   else if(a==='mapOpen'){ if(BrainMap.sel && BrainMap.sel.note) openNote(BrainMap.sel.note.id); }
@@ -1317,6 +1393,12 @@ document.addEventListener('click', e => {
   if(tick){ const n = byId(tick.dataset.tick); n.done = tick.checked; changed(n); if(n.done){ haptic('success'); toast('✓ Done', 'Undo', () => { n.done = false; changed(n); render(); }); } setTimeout(render, n.done ? 350 : 0); return; }
   const dn = t.closest('[data-done]'); if(dn){ const n = byId(dn.dataset.done); n.done = true; changed(n); haptic('success'); toast('✓ Done', 'Undo', () => { n.done = false; changed(n); render(); }); ui.anim = true; render(); return; }
   const op = t.closest('[data-open]'); if(op){ openNote(op.dataset.open); return; }
+  const oc = t.closest('[data-ocr]'); if(oc){ db.settings.ai.ocr = oc.dataset.ocr; save(); renderAI(); return; }
+  const ist = t.closest('[data-imgstyle]'); if(ist){ img.prompt = $('#imgPrompt').value; img.style = ist.dataset.imgstyle; renderImagine(); return; }
+  const isz = t.closest('[data-imgsize]'); if(isz){ img.prompt = $('#imgPrompt').value; img.size = isz.dataset.imgsize; renderImagine(); return; }
+  const sp = t.closest('[data-sugpara]'); if(sp && cur){ cur.para = sp.dataset.sugpara; changed(cur); haptic('light'); showEditor(); toast('Moved to ' + PAR[cur.para].l); return; }
+  const stg = t.closest('[data-sugtag]'); if(stg && cur){ cur.body = withTags(cur.body, [stg.dataset.sugtag]); changed(cur); haptic('light'); showEditor(); return; }
+  const ak = t.closest('[data-askai]'); if(ak){ const q = ak.dataset.askai; renderAI(); openSheet('aiSheet'); aiAsk(q); return; }
   const mf = t.closest('[data-mapf]'); if(mf){ BrainMap.filter = mf.dataset.mapf; BrainMap.build(); BrainMap.paintUI(); BrainMap.select(null); return; }
   const ext = t.closest('[data-ext]');
   if(ext && !t.closest('[data-savenews]')){ e.preventDefault(); openExternal(ext.dataset.ext); return; }
@@ -1356,11 +1438,15 @@ document.addEventListener('change', e => {
   if(t.id==='sAuto'){ db.settings.autoUpdate = t.checked; save(); }
   else if(t.id==='sAutoBk'){ db.settings.autoBackup = t.checked; save(); }
   else if(t.id==='sCity'){ db.settings.city = t.value.trim() || 'Bangkok'; save(); loadWeather(true); }
+  else if(t.id==='aiMapLinks'){ db.settings.ai.mapLinks = t.checked; save(); }
+  else if(t.id==='hfKey'){ db.settings.ai.hfToken = t.value.trim(); save(); toast(db.settings.ai.hfToken ? 'Hugging Face key saved' : 'Key removed'); }
+  else if(t.id==='aiOcrPick'){ const f = [...t.files]; t.value = ''; aiOcrFiles(f); }
   else if(t.id==='wikiLang'){ db.settings.wikiLang = t.value; save(); if(ui.wikiQ) runWiki(ui.wikiQ); }
 });
 async function runWiki(q){ ui.wikiQ = q; if(!navigator.onLine){ toast('Search needs internet'); return; } try{ ui.wiki = await wikiSearch(q); }catch(err){ toast('Search failed: ' + err.message); ui.wiki = []; } render(); }
 document.addEventListener('submit', async e => {
   e.preventDefault();
+  if(e.target.id==='aiForm'){ const q = $('#aiQ').value.trim(); $('#aiQ').blur(); aiAsk(q); }
   if(e.target.id==='wikiForm'){ const q = $('#wikiQ').value.trim(); if(q) runWiki(q); $('#wikiQ').blur(); }
   if(e.target.id==='authForm'){
     const mode = (e.submitter && e.submitter.dataset.mode) || 'in', email = $('#aEmail').value.trim(), pw = $('#aPass').value;
@@ -1784,6 +1870,10 @@ const BrainMap = {
       tagsOf(n).forEach(t => link(me, byId.get('#'+t), 1));
       [...(n.body||'').matchAll(/\[\[([^\]]+)\]\]/g)].forEach(m => { const target = byTitle(m[1]); if(target) link(me, byId.get(target.id), 1.4); });
     });
+    if(db.settings.ai.mapLinks && typeof AI!=='undefined' && AI.on()){
+      const seen = new Set(edges.map(e => e.a.id + '|' + e.b.id));
+      notes.forEach(n => AI.similar(n, 2).forEach(({n:o}) => { const a = byId.get(n.id), b = byId.get(o.id); if(!a || !b) return; const k1 = a.id + '|' + b.id, k2 = b.id + '|' + a.id; if(seen.has(k1) || seen.has(k2)) return; seen.add(k1); link(a, b, .7); edges[edges.length-1].sem = true; }));
+    }
     this.nodes = nodes; this.edges = edges; this.byId = byId;
     this.adj = new Map(nodes.map(n => [n, new Set()]));
     edges.forEach(e => { this.adj.get(e.a).add(e.b); this.adj.get(e.b).add(e.a); });
@@ -1839,7 +1929,9 @@ const BrainMap = {
       const hot = sel && (e.a===sel || e.b===sel), depth = ((e.a.Z+e.b.Z)/2 + 3)/6;
       x.globalAlpha = sel ? (hot ? .85 : .05) : .10 + depth*.22;
       x.strokeStyle = hot ? acc : (e.w > 1 ? acc : this.colorOf(e.a.kind==='tag'?e.a:e.b));
+      if(e.sem) x.setLineDash([3, 4]);
       x.beginPath(); x.moveTo(e.a.X, e.a.Y); x.lineTo(e.b.X, e.b.Y); x.stroke();
+      if(e.sem) x.setLineDash([]);
     }
     const order = this.nodes.slice().sort((a,b) => a.Z - b.Z);
     for(const n of order){
@@ -1902,6 +1994,250 @@ const BrainMap = {
 })();
 function openMap(){ openSheet('map'); requestAnimationFrame(() => BrainMap.open()); haptic('medium'); }
 
+/* ================= Brain AI — open models that run on the phone (Transformers.js + Tesseract.js) ================= */
+const AI_LIB = 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.3.2';
+const OCR_LIB = 'https://cdn.jsdelivr.net/npm/tesseract.js@7.0.0/dist/tesseract.min.js';
+const AI_MODELS = {
+  multi:{id:'Xenova/multilingual-e5-small', label:'Multilingual — Thai, English, French, Arabic', size:'118 MB', sim:.82, org:.78, lo:.74, hi:.9, q:'query: ', p:'passage: '},
+  en:{id:'Xenova/all-MiniLM-L6-v2', label:'English only — fastest', size:'23 MB', sim:.45, org:.25, lo:.08, hi:.62, q:'', p:''}
+};
+let EMB = {}, embTimer;
+const saveEmb = () => { clearTimeout(embTimer); embTimer = setTimeout(() => Store.set('emb', EMB).catch(()=>{}), 800); };
+const dot = (a, b) => { let s = 0; for(let i=0;i<a.length;i++) s += a[i]*b[i]; return s; };
+const AI = {
+  ex:null, loading:null, busy:false, ready:false,
+  cfg(){ return AI_MODELS[db.settings.ai.model]; },
+  on(){ return !!this.cfg(); },
+  async choose(){
+    if(this.on()) return true;
+    return new Promise(res => {
+      const pick = m => { db.settings.ai.model = m; save(); res(true); };
+      actions('Turn on Brain AI', [
+        {i:'🌏', l:`${AI_MODELS.multi.label} (${AI_MODELS.multi.size})`, fn:() => pick('multi')},
+        {i:'⚡', l:`${AI_MODELS.en.label} (${AI_MODELS.en.size})`, fn:() => pick('en')},
+        {i:'✕', l:'Not now', fn:() => res(false)}
+      ]);
+    });
+  },
+  async load(){
+    if(this.ex) return this.ex;
+    if(this.loading) return this.loading;
+    this.loading = (async () => {
+      aiStatus('Starting Brain AI…');
+      const T = await import(AI_LIB);
+      T.env.allowLocalModels = false;
+      this.ex = await T.pipeline('feature-extraction', this.cfg().id, {dtype:'q8', device:'wasm', progress_callback:p => {
+        if(p.status==='progress' && p.total > 5e6) aiStatus(`Downloading the AI model… ${Math.round(p.loaded/p.total*100)}% (first time only)`, p.loaded/p.total);
+      }});
+      this.model = db.settings.ai.model;
+      return this.ex;
+    })();
+    try{ return await this.loading; } catch(e){ this.ex = null; throw new Error(navigator.onLine ? 'Could not start the AI model' : 'The AI model needs internet the first time'); } finally{ this.loading = null; }
+  },
+  textOf(n){ return ((n.title||'') + '. ' + (n.body||'').replace(URLRE,' ') + ' ' + (n.preview ? (n.preview.title||'') + ' ' + (n.preview.description||'') : '')).replace(/\s+/g,' ').slice(0,1200); },
+  hash(s){ let h = 0; for(let i=0;i<s.length;i++) h = (h*31 + s.charCodeAt(i)) | 0; return h; },
+  async embed(texts){ const ex = await this.load(); const r = await ex(texts, {pooling:'mean', normalize:true}); return r.tolist(); },
+  async index(show){
+    if(!this.on() || this.busy) return;
+    if(this.model && this.model !== db.settings.ai.model){ this.ex = null; }
+    this.busy = true;
+    try{
+      const m = db.settings.ai.model, need = db.notes.filter(n => { const e = EMB[n.id]; return !e || e.m !== m || e.h !== this.hash(this.textOf(n)); });
+      for(let i=0; i<need.length; i+=8){
+        const batch = need.slice(i, i+8), vs = await this.embed(batch.map(n => this.cfg().p + this.textOf(n)));
+        batch.forEach((n, j) => EMB[n.id] = {m, h:this.hash(this.textOf(n)), v:vs[j].map(x => Math.round(x*1e4)/1e4)});
+        if(show) aiStatus(`Understanding your notes… ${Math.min(i+8, need.length)} of ${need.length}`, Math.min(i+8, need.length)/need.length);
+      }
+      const ids = new Set(db.notes.map(n => n.id)); Object.keys(EMB).forEach(k => { if(!ids.has(k)) delete EMB[k]; });
+      this.ready = true; saveEmb(); aiStatus('');
+    } finally{ this.busy = false; }
+  },
+  vec(n){ const e = EMB[n.id]; return e && e.m===db.settings.ai.model ? e.v : null; },
+  async search(q, k=20){
+    await this.index(true);
+    const [qv] = await this.embed([this.cfg().q + q]);
+    return db.notes.map(n => ({n, s:this.vec(n) ? dot(qv, this.vec(n)) : -1})).filter(x => x.s > -1).sort((a,b) => b.s - a.s).slice(0, k);
+  },
+  similar(n, k=4){
+    const v = this.vec(n); if(!v) return [];
+    return db.notes.filter(o => o!==n && o.para!=='archive' && this.vec(o)).map(o => ({n:o, s:dot(v, this.vec(o))})).filter(x => x.s >= this.cfg().sim).sort((a,b) => b.s - a.s).slice(0, k);
+  },
+  suggest(n){
+    const v = this.vec(n); if(!v) return null;
+    const pool = db.notes.filter(o => o!==n && o.para!=='inbox' && o.para!=='archive' && o.id!=='welcome' && this.vec(o));
+    const nb = pool.map(o => ({o, s:dot(v, this.vec(o))})).sort((a,b) => b.s - a.s).slice(0, 7).filter(x => x.s >= this.cfg().org);
+    if(!nb.length) return null;
+    const vote = (key) => { const m = {}; nb.forEach(x => m[x.o[key]] = (m[x.o[key]]||0) + x.s); return Object.entries(m).sort((a,b) => b[1]-a[1])[0]; };
+    const [para, pw] = vote('para'), total = nb.reduce((a,x) => a + x.s, 0);
+    const have = new Set(tagsOf(n)), tm = {};
+    nb.forEach(x => tagsOf(x.o).forEach(t => { if(!have.has(t)) tm[t] = (tm[t]||0) + x.s; }));
+    const tags = Object.entries(tm).filter(([,w]) => w >= total * .3).sort((a,b) => b[1]-a[1]).slice(0, 3).map(([t]) => t);
+    return {para, conf:pw/total, tags};
+  },
+  async summarize(text, k=3){
+    const sents = text.replace(URLRE,' ').split(/(?<=[.!?。])\s+|\n+/).map(s => s.trim()).filter(s => s.length > 25);
+    if(sents.length <= k) return null;
+    const vs = await this.embed(sents.slice(0, 60).map(s => this.cfg().p + s));
+    const c = vs[0].map((_, i) => vs.reduce((a, v) => a + v[i], 0) / vs.length);
+    return vs.map((v, i) => ({i, s:dot(v, c)})).sort((a,b) => b.s - a.s).slice(0, k).sort((a,b) => a.i - b.i).map(x => sents[x.i]);
+  }
+};
+function aiStatus(text, p){
+  AI.status = text; AI.prog = p;
+  const el = $('#aiProg'); if(!el) return;
+  el.classList.toggle('hide', !text); el.querySelector('span').textContent = text || '';
+  el.querySelector('i').style.width = p != null ? Math.round(p*100) + '%' : '';
+}
+
+/* ---------- OCR: read text from photos ---------- */
+const OCR = {
+  async read(blobs){
+    if(!window.Tesseract) await new Promise((res, rej) => { const s = document.createElement('script'); s.src = OCR_LIB; s.onload = res; s.onerror = () => rej(new Error('Text reader needs internet the first time')); document.head.appendChild(s); });
+    aiStatus('Starting the text reader…');
+    const w = await Tesseract.createWorker(db.settings.ai.ocr.split('+'), 1, {logger:m => { if(m.status==='recognizing text') aiStatus('Reading text…', m.progress); else if(/loading/.test(m.status)) aiStatus('Downloading language data (first time only)…', m.progress); }});
+    const out = [];
+    try{ for(const b of blobs){ const {data} = await w.recognize(b); out.push(data.text.trim()); } } finally{ await w.terminate(); aiStatus(''); }
+    return out;
+  }
+};
+
+/* ---------- Brain AI screen ---------- */
+let aiResults = null, aiQuery = '';
+function renderAI(){
+  const el = $('#aiBody'); if(!el) return;
+  const cfg = AI.cfg(), indexed = db.notes.filter(n => AI.vec(n)).length;
+  let h = `<div class="ai-hero glass"><div class="orb-ai"><i></i></div><div><b class="gtext">Brain AI</b><span>${cfg ? `${esc(cfg.label)} · ${indexed}/${db.notes.length} notes understood` : 'Free open-source AI that runs on your phone. Nothing is sent to any AI company.'}</span></div></div>`;
+  h += `<div class="prog ${AI.status ? '' : 'hide'}" id="aiProg"><span>${esc(AI.status||'')}</span><div><i style="${AI.prog!=null?`width:${Math.round(AI.prog*100)}%`:''}"></i></div></div>`;
+  if(!cfg){
+    h += `<div class="panel" style="margin-top:12px"><p class="mut" style="margin:0 0 10px">Brain AI understands the <b>meaning</b> of your notes: search by idea instead of exact words, find similar notes, sort your inbox automatically and summarize long notes. It also reads text from photos.</p><button class="btn grad wide" data-act="aiOn">✨ Turn on Brain AI</button></div>`;
+  } else {
+    h += `<form class="search" id="aiForm" style="margin-top:12px"><input id="aiQ" type="search" placeholder="Ask your brain… e.g. solar prices, ideas for my shop" value="${esc(aiQuery)}" enterkeyhint="search" autocomplete="off"></form>`;
+    if(aiResults) h += aiResults.length ? `<div class="sec"><h2>Best matches</h2><span class="small">by meaning</span></div>` + aiResults.map(({n, s}, i) => card(n, i).replace('<div class="meta">', `<div class="meta"><span class="match">${Math.round(Math.max(0, Math.min(1, (s - cfg.lo) / (cfg.hi - cfg.lo)))*100)}% match</span>`)).join('') : '<div class="empty">No matches</div>';
+  }
+  h += `<div class="sec"><h2>Tools</h2></div><div class="tools">
+    <button class="tool glass" data-act="aiOrganize"><i>🗂️</i><b>Auto-organize inbox</b><small>Sorts notes into folders and adds tags, learning from how you organize</small></button>
+    <button class="tool glass" data-act="aiOcr"><i>📷</i><b>Read text from photo</b><small>Receipts, cards, signs, documents — Thai and English</small></button>
+    <button class="tool glass" data-act="openMap"><i>🧠</i><b>Brain map</b><small>${db.settings.ai.mapLinks ? 'Showing links by meaning' : 'See how your notes connect'}</small></button>
+    <button class="tool glass" data-act="imagine"><i>🎨</i><b>Imagine</b><small>Create images from text with open models</small></button></div>`;
+  if(cfg) h += `<div class="sec"><h2>Settings</h2></div><div class="panel">
+    <label class="sw2">Link notes by meaning in the Brain map<input type="checkbox" id="aiMapLinks" ${db.settings.ai.mapLinks?'checked':''}></label>
+    <div class="optlabel">Text reader languages</div><div class="seg">${[['eng+tha','English + Thai'],['eng+fra+ara','EN + FR + AR'],['eng','English']].map(([k,l]) => `<button class="${db.settings.ai.ocr===k?'on':''}" data-ocr="${k}">${l}</button>`).join('')}</div>
+    <div class="row"><button class="btn g sm" data-act="aiModel">Change AI model</button><button class="link" data-act="aiOff" style="color:var(--bad)">Turn off and free space</button></div>
+    <p class="small" style="margin:6px 0 0">Models: ${esc(cfg.id)} (Hugging Face) · Tesseract OCR. Both open source.</p></div>`;
+  el.innerHTML = h; hydrate(el);
+}
+async function aiAsk(q){
+  aiQuery = q; if(!q) return;
+  try{ if(!(await AI.choose())) return; aiResults = null; renderAI(); aiResults = await AI.search(q, 15); }
+  catch(e){ toast(e.message); aiStatus(''); }
+  renderAI();
+}
+async function aiOrganize(){
+  if(!(await AI.choose())) return;
+  try{
+    await AI.index(true);
+    const inbox = db.notes.filter(n => n.para==='inbox' && n.type!=='journal'), done = [];
+    for(const n of inbox){
+      const sg = AI.suggest(n); if(!sg) continue;
+      const before = {para:n.para, body:n.body};
+      if(sg.conf >= .45 && sg.para) n.para = sg.para;
+      if(sg.tags.length) n.body = withTags(n.body, sg.tags);
+      if(n.para!==before.para || n.body!==before.body){ changed(n); done.push([n, before]); }
+    }
+    renderAI(); render();
+    if(done.length){ haptic('success'); toast(`✨ Organized ${done.length} note${done.length>1?'s':''}`, 'Undo', () => { done.forEach(([n, b]) => { n.para = b.para; n.body = b.body; changed(n); }); render(); renderAI(); }); }
+    else toast(inbox.length ? 'Not sure yet — organize a few notes by hand first so I can learn your style' : 'Your inbox is already empty 🎉');
+  }catch(e){ toast(e.message); aiStatus(''); }
+}
+async function aiOcrFiles(files, intoNote){
+  if(!files.length) return;
+  try{
+    const texts = await OCR.read(files);
+    const text = texts.filter(Boolean).join('\n\n---\n\n');
+    if(!text){ toast('No text found in the photo'); return; }
+    if(intoNote){ intoNote.body = (intoNote.body.trim() ? intoNote.body.trimEnd() + '\n\n' : '') + '## Text from photos\n' + text; changed(intoNote); if(cur===intoNote) showEditor(); toast('📷 Text added to the note'); return; }
+    const n = newNote({title:text.split('\n').find(l => l.trim().length > 3)?.trim().slice(0, 80) || 'Text from photo', body:text, para:'inbox'});
+    for(const f of files){ try{ n.files.push(await addFile(f)); }catch(e){} }
+    changed(n); haptic('success'); toast('📷 Saved the text as a note', 'Open', () => openNote(n.id));
+    AI.on() && AI.index();
+  }catch(e){ toast(e.message); aiStatus(''); }
+}
+async function noteAIExtras(n){
+  const el = $('#eAI'); if(!el) return;
+  el.innerHTML = '';
+  if(!AI.on() || !AI.vec(n)) return;
+  let h = '';
+  const sg = n.para==='inbox' ? AI.suggest(n) : null;
+  if(sg && (sg.tags.length || (sg.conf >= .45 && sg.para!=='inbox'))) h += `<div class="sec"><h2>✨ Suggestions</h2></div><div class="chips" style="margin:0">${sg.conf >= .45 && sg.para!=='inbox' ? `<button class="chip" data-sugpara="${sg.para}">${PAR[sg.para].i} Move to ${PAR[sg.para].l}</button>` : ''}${sg.tags.map(t => `<button class="chip" data-sugtag="${esc(t)}">＋ #${esc(t)}</button>`).join('')}</div>`;
+  const sim = AI.similar(n);
+  if(sim.length) h += `<div class="sec"><h2>Similar notes</h2><span class="small">by meaning</span></div>` + sim.map((x, i) => card(x.n, i)).join('');
+  el.innerHTML = h; hydrate(el);
+}
+
+/* ---------- Imagine: images from text with open models ---------- */
+const IMG_STYLES = [['none','No style',''],['photo','Photo','photorealistic, natural light, 50mm, highly detailed'],['cinematic','Cinematic','cinematic still, dramatic lighting, shallow depth of field, film grain'],['anime','Anime','anime style, vibrant colors, clean line art'],['3d','3D','3D render, octane, soft studio lighting, high detail'],['logo','Logo','minimal flat vector logo, simple shapes, centered, white background'],['poster','Poster','bold graphic poster design, striking composition'],['watercolor','Watercolor','watercolor painting, soft washes, paper texture']];
+const IMG_SIZES = [['square','Square',1024,1024],['portrait','Portrait',768,1344],['landscape','Landscape',1344,768]];
+const HF_SPACES = ['black-forest-labs-flux-1-schnell'];
+let img = {prompt:'', style:'none', size:'square', busy:false, last:null, err:''};
+async function genHF(prompt, w, h, seed){
+  const {InferenceClient} = await import('https://cdn.jsdelivr.net/npm/@huggingface/inference@4/+esm');
+  try{
+    const blob = await new InferenceClient(db.settings.ai.hfToken).textToImage({provider:'auto', model:'black-forest-labs/FLUX.1-schnell', inputs:prompt, parameters:{width:w, height:h, num_inference_steps:4, seed}}, {outputType:'blob'});
+    return {blob, engine:'FLUX.1-schnell · your Hugging Face key'};
+  }catch(e){ const m = String(e.message || e); throw new Error(/password|token|401|403|unauthor/i.test(m) ? 'Hugging Face key not accepted' : /credit|quota|402|429|limit/i.test(m) ? 'free Hugging Face allowance used up for this month' : 'Hugging Face: ' + m.slice(0, 90)); }
+}
+async function genSpace(space, prompt, w, h, seed){
+  const base = `https://${space}.hf.space/gradio_api`;
+  const st = await fetch(`${base}/call/infer`, {method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify({data:[prompt, seed, false, w, h, 4]})});
+  if(!st.ok) throw new Error('free server busy');
+  const {event_id} = await st.json();
+  const txt = await (await fetch(`${base}/call/infer/${event_id}`)).text();
+  const m = txt.match(/event: complete\s*\ndata: (.*)/);
+  if(!m) throw new Error('free server is out of free time right now');
+  const out = JSON.parse(m[1])[0], url = out.url || `${base}/file=${out.path}`;
+  return {blob:await (await fetch(url)).blob(), engine:'FLUX.1-schnell · free Hugging Face Space'};
+}
+async function generateImage(){
+  if(img.busy) return;
+  const p = ($('#imgPrompt') || {}).value?.trim() || img.prompt; img.prompt = p;
+  if(!p){ toast('Describe the image first'); return; }
+  if(!navigator.onLine){ toast('Image generation needs internet'); return; }
+  const style = IMG_STYLES.find(s => s[0]===img.style), size = IMG_SIZES.find(s => s[0]===img.size), seed = Math.floor(Math.random()*2147483647);
+  const prompt = style[2] ? `${p}, ${style[2]}` : p;
+  img.busy = true; img.err = ''; renderImagine(); haptic('light');
+  const tries = [];
+  if(db.settings.ai.hfToken) tries.push(() => genHF(prompt, size[2], size[3], seed));
+  HF_SPACES.forEach(sp => tries.push(() => genSpace(sp, prompt, size[2], size[3], seed)));
+  const errs = [];
+  for(const t of tries){ try{ const r = await t(); img.last = {...r, prompt:p, style:img.style, url:URL.createObjectURL(r.blob)}; break; } catch(e){ errs.push(e.message); } }
+  if(!img.last || img.last.prompt !== p) img.err = 'Could not create the image: ' + errs.join(' · ') + (db.settings.ai.hfToken ? '' : '. Add a free Hugging Face key below for reliable results.');
+  else haptic('success');
+  img.busy = false; renderImagine();
+}
+function renderImagine(){
+  const el = $('#imgBody'); if(!el) return;
+  const gallery = db.notes.filter(n => tagsOf(n).includes('ai-art') && (n.files||[]).length).sort((a,b) => b.created - a.created).slice(0, 12);
+  let h = `<textarea id="imgPrompt" rows="3" placeholder="Describe your image… e.g. a solar-powered Thai street food stall at sunset">${esc(img.prompt)}</textarea>
+    <div class="optlabel">Style</div><div class="chips" style="margin:0 -18px;padding-left:18px">${IMG_STYLES.map(s => `<button class="chip ${img.style===s[0]?'on':''}" data-imgstyle="${s[0]}">${s[1]}</button>`).join('')}</div>
+    <div class="optlabel">Shape</div><div class="seg">${IMG_SIZES.map(s => `<button class="${img.size===s[0]?'on':''}" data-imgsize="${s[0]}">${s[1]}</button>`).join('')}</div>
+    <button class="btn grad wide" style="margin-top:14px" data-act="imgGo" ${img.busy?'disabled':''}>${img.busy ? 'Creating… (10–40 s)' : '🎨 Create image'}</button>`;
+  if(img.busy) h += `<div class="img-out skel"></div>`;
+  else if(img.last) h += `<figure class="img-out"><img src="${img.last.url}" alt="${esc(img.last.prompt)}"><figcaption>${esc(img.last.engine)}</figcaption></figure>
+      <div class="row"><button class="btn grad" style="flex:1" data-act="imgSave">Save to notes</button><button class="btn g" style="flex:1" data-act="imgShare">Share</button><button class="ib" data-act="imgGo" aria-label="Again">↻</button></div>`;
+  if(img.err) h += `<div class="banner" style="border-color:var(--bad)">⚠️ <span>${esc(img.err)}</span></div>`;
+  if(gallery.length) h += `<div class="sec"><h2>Your creations</h2></div><div class="gallery">${gallery.map(n => `<img data-file="${n.files[0]}" data-open="${n.id}" alt="${esc(n.title)}">`).join('')}</div>`;
+  h += `<div class="sec"><h2>Image engine</h2></div><div class="panel"><p class="mut" style="margin:0 0 8px">Uses the open-source <b>FLUX.1-schnell</b> model. Without a key it tries the free public FLUX server on Hugging Face, which is often out of free time. A <b>free Hugging Face key</b> makes it reliable, within Hugging Face's small free monthly allowance.</p>
+    <input id="hfKey" type="password" placeholder="hf_… (optional)" value="${esc(db.settings.ai.hfToken)}" autocomplete="off">
+    <p class="small" style="margin:6px 0 0">Get one at huggingface.co → Settings → Access Tokens → New token → tick “Make calls to Inference Providers”. The key stays on this phone and is never backed up.</p></div>`;
+  el.innerHTML = h; hydrate(el);
+}
+async function imgSave(){
+  const L = img.last; if(!L) return;
+  const n = newNote({title:'🎨 ' + L.prompt.slice(0, 80), body:`${L.prompt}\n\nStyle: ${IMG_STYLES.find(s => s[0]===L.style)[1]} · ${L.engine}\n\n#ai-art`, type:'idea', para:'resources'});
+  try{ n.files.push(await addFile(new File([L.blob], 'image-' + Date.now() + '.jpg', {type:L.blob.type || 'image/jpeg'}))); }catch(e){ toast(e.message); }
+  changed(n); haptic('success'); toast('Saved to Resources', 'Open', () => openNote(n.id)); renderImagine();
+}
+
 /* ================= init ================= */
 $('#eType').innerHTML = TYPES.map(t => `<option value="${t[0]}">${t[2]} ${t[1]}</option>`).join('');
 $('#ePara').innerHTML = PARA.map(p => `<option value="${p[0]}">${p[2]} ${p[1]}</option>`).join('');
@@ -1909,12 +2245,13 @@ $('#ePara').innerHTML = PARA.map(p => `<option value="${p[0]}">${p[2]} ${p[1]}</
   await load();
   if(!db.settings.init){
     newNote({id:'welcome', pinned:true, para:'resources', title:'Welcome to your second brain 🧠', body:
-'## Quick start\n- Tap **＋** to capture anything: a note, task, idea, link or photo\n- **Notes** tab: search, filter by folder or tag, list or grid view\n- Swipe a note **right** to pin, **left** to archive, long-press for more\n- **Tasks** tab: due dates, today, overdue\n- **Brain map** (🧠 on Home or Notes): see all your notes as a 3D network linked by tags and [[links]]\n- **Discover**: weather, currency, news, Wikipedia search and the file converter\n- **Convert** (on Home): change photos, PDFs, videos, music, Word and Excel files to other formats\n- Link notes with [[My ideas]] and add tags by typing # before a word, like #ideas\n\n## Your data\n- Works fully offline on this phone\n- Tap your avatar (top right) to sign in — notes sync to the cloud and back up every day\n- Back up to Google Drive any time from the same screen\n\n## Checklists\n- [ ] Tap to tick\n- [x] Open this note'});
+'## Quick start\n- Tap **＋** to capture anything: a note, task, idea, link or photo\n- **Notes** tab: search, filter by folder or tag, list or grid view\n- Swipe a note **right** to pin, **left** to archive, long-press for more\n- **Tasks** tab: due dates, today, overdue\n- **Brain map** (🧠 on Home or Notes): see all your notes as a 3D network linked by tags and [[links]]\n- **Brain AI** (✨ on Home): ask by meaning, similar notes, auto-organize your inbox, summaries, read text from photos — free open-source models on your phone\n- **Imagine** (🎨 on Home): create images from text with the open FLUX model\n- **Discover**: weather, currency, news, Wikipedia search and the file converter\n- **Convert** (on Home): change photos, PDFs, videos, music, Word and Excel files to other formats\n- Link notes with [[My ideas]] and add tags by typing # before a word, like #ideas\n\n## Your data\n- Works fully offline on this phone\n- Tap your avatar (top right) to sign in — notes sync to the cloud and back up every day\n- Back up to Google Drive any time from the same screen\n\n## Checklists\n- [ ] Tap to tick\n- [x] Open this note'});
     db.settings.init = 1; save();
   }
   applyTheme(); document.title = db.settings.name; render();
   if(navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(()=>{});
   if(Cloud.on()) Cloud.sync();
+  if(AI.on()) setTimeout(() => AI.index().catch(()=>{}), 6000);
   loadWeather().then(() => { if(ui.tab==='home' || ui.tab==='discover') render(); });
   loadFX();
   if(db.settings.autoUpdate && Date.now() - (db.settings.lastCheck||0) > 3*3600e3) setTimeout(() => checkUpdate(false), 3000);
