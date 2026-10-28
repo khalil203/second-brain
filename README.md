@@ -1,6 +1,6 @@
 # Second Brain 🧠
 
-A personal second-brain app: notes, tasks with due dates, daily journal, tags, linked notes, photos and files, plus a Discover tab with weather, currency, news and Wikipedia search, and a file converter for photos, PDFs, video, music, Word and Excel files. Works offline, syncs to the cloud when you sign in, and backs up daily.
+A personal second-brain app in the Neural Night design: notes, tasks with due dates, daily journal, tags, linked notes, a 3D Brain map of how your notes connect, focus card and streaks, photos and files, plus a Discover tab with weather, currency, news and Wikipedia search, and a file converter for photos, PDFs, video, music, Word and Excel files. Works offline, syncs to the cloud when you sign in, and backs up daily.
 
 ## Install
 

@@ -59,11 +59,11 @@ jobs:
       - name: Create Android project (Capacitor)
         run: |
           npm init -y > /dev/null
-          npm install @capacitor/core@latest @capacitor/cli@latest @capacitor/android@latest @capacitor/filesystem@latest @capacitor/share@latest @capacitor/browser@latest
+          npm install @capacitor/core@latest @capacitor/cli@latest @capacitor/android@latest @capacitor/filesystem@latest @capacitor/share@latest @capacitor/browser@latest @capacitor/haptics@latest
           npx cap add android
           npx --yes @capacitor/assets@latest generate --android \
-            --iconBackgroundColor '#0A0C10' --iconBackgroundColorDark '#0A0C10' \
-            --splashBackgroundColor '#0A0C10' --splashBackgroundColorDark '#0A0C10' \
+            --iconBackgroundColor '#070B14' --iconBackgroundColorDark '#070B14' \
+            --splashBackgroundColor '#070B14' --splashBackgroundColorDark '#070B14' \
             || echo "::warning::Icon generation failed, using default icons"
           npx cap sync android
 

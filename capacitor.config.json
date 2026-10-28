@@ -2,9 +2,9 @@
   "appId": "com.khalil.secondbrain",
   "appName": "Second Brain",
   "webDir": "www",
-  "backgroundColor": "#0A0C10",
+  "backgroundColor": "#070B14",
   "android": {
-    "backgroundColor": "#0A0C10",
+    "backgroundColor": "#070B14",
     "allowMixedContent": false
   }
 }
