@@ -4,7 +4,7 @@ A personal second-brain app with Claude AI built in: notes, tasks, journal, tags
 
 ## Install
 
-- **Android app:** download [second-brain.apk](https://github.com/khalil203/second-brain/releases/latest/download/second-brain.apk) and open it (allow "Install unknown apps" for your browser when asked).
+- **Android app:** download [second-brain.apk](https://github.com/khalil203/second-brain/raw/main/dist/second-brain.apk) and open it (allow "Install unknown apps" for your browser when asked).
 - **Web app:** open https://khalil203.github.io/second-brain/ in Chrome, then menu ⋮ → **Install app**.
 
 ## Updates

@@ -94,6 +94,15 @@ jobs:
           "$BT/apksigner" verify second-brain.apk
           echo "signed=true" >> "$GITHUB_OUTPUT"
 
+      - name: Save APK in the repo (download link + in-app APK update)
+        if: steps.sign.outputs.signed == 'true'
+        run: |
+          mkdir -p dist && cp second-brain.apk dist/second-brain.apk
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dist/second-brain.apk
+          git commit -m "Android APK ${{ env.APKV }} [skip ci]" && git push || echo "APK unchanged"
+
       - if: steps.sign.outputs.signed == 'true'
         uses: softprops/action-gh-release@v2
         with:
