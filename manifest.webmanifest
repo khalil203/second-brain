@@ -1,7 +1,7 @@
 {
   "name": "Second Brain",
   "short_name": "Brain",
-  "description": "Your personal second brain with Claude AI — notes, tasks, journal and files, offline first.",
+  "description": "Your personal second brain — notes, tasks, journal, files and live info, synced to the cloud and offline first.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

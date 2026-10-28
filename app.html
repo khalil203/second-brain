@@ -4,316 +4,360 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0A0C10">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <title>Second Brain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ===== Design system — "Neural": dark-first, mint synapse accent, warm amber highlight ===== */
 :root{
-  --bg:#F3F2EE;--bg2:#FFFFFF;--card:rgba(255,255,255,.78);--solid:#FFFFFF;--ink:#14161B;--mut:#5F6674;
-  --line:rgba(20,22,27,.09);--acc:#0E9E7C;--accInk:#FFFFFF;--acc2:rgba(14,158,124,.10);--warm:#C77700;--bad:#D93B3B;
-  --sh1:0 1px 2px rgba(20,22,27,.05),0 8px 24px -12px rgba(20,22,27,.18);
-  --sh2:0 2px 4px rgba(20,22,27,.06),0 24px 48px -20px rgba(20,22,27,.28);
-  --ambient:radial-gradient(1200px 600px at 85% -10%,rgba(14,158,124,.10),transparent 60%),radial-gradient(900px 500px at -10% 110%,rgba(199,119,0,.06),transparent 60%);
+  --bg:#F2F2EE;--bg2:#FFFFFF;--card:rgba(255,255,255,.82);--solid:#FFFFFF;--ink:#14161B;--mut:#5F6674;--faint:#9AA0AC;
+  --line:rgba(20,22,27,.09);--acc:#0E9E7C;--accInk:#FFFFFF;--acc2:rgba(14,158,124,.11);--warm:#C77700;--bad:#D93B3B;--good:#16A34A;
+  --sh1:0 1px 2px rgba(20,22,27,.05),0 8px 24px -14px rgba(20,22,27,.2);
+  --sh2:0 2px 6px rgba(20,22,27,.06),0 24px 50px -22px rgba(20,22,27,.32);
+  --ambient:radial-gradient(1100px 560px at 90% -12%,var(--acc2),transparent 60%);
   --r:18px;--ease:cubic-bezier(.2,.8,.2,1);
   --font:"Inter","IBM Plex Sans Thai","Noto Sans Thai",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --tabH:64px;--safeB:env(safe-area-inset-bottom);
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme=light]){
-  --bg:#0A0C10;--bg2:#10141B;--card:rgba(24,29,38,.66);--solid:#151A22;--ink:#ECEEF2;--mut:#8C94A4;
-  --line:rgba(255,255,255,.08);--acc:#2EE6B6;--accInk:#04231B;--acc2:rgba(46,230,182,.12);--warm:#FFB547;--bad:#FF6464;
-  --sh1:0 1px 0 rgba(255,255,255,.04) inset,0 10px 30px -14px rgba(0,0,0,.7);
-  --sh2:0 1px 0 rgba(255,255,255,.05) inset,0 30px 60px -24px rgba(0,0,0,.85);
-  --ambient:radial-gradient(1100px 600px at 85% -10%,rgba(46,230,182,.10),transparent 60%),radial-gradient(900px 500px at -10% 110%,rgba(255,181,71,.06),transparent 60%);
-}}
-:root[data-theme=dark]{
-  --bg:#0A0C10;--bg2:#10141B;--card:rgba(24,29,38,.66);--solid:#151A22;--ink:#ECEEF2;--mut:#8C94A4;
-  --line:rgba(255,255,255,.08);--acc:#2EE6B6;--accInk:#04231B;--acc2:rgba(46,230,182,.12);--warm:#FFB547;--bad:#FF6464;
-  --sh1:0 1px 0 rgba(255,255,255,.04) inset,0 10px 30px -14px rgba(0,0,0,.7);
-  --sh2:0 1px 0 rgba(255,255,255,.05) inset,0 30px 60px -24px rgba(0,0,0,.85);
-  --ambient:radial-gradient(1100px 600px at 85% -10%,rgba(46,230,182,.10),transparent 60%),radial-gradient(900px 500px at -10% 110%,rgba(255,181,71,.06),transparent 60%);
+:root.dark{
+  --bg:#0A0C10;--bg2:#10141B;--card:rgba(24,29,38,.72);--solid:#161B23;--ink:#ECEEF2;--mut:#8F97A6;--faint:#5E6676;
+  --line:rgba(255,255,255,.08);--warm:#FFB547;--bad:#FF6464;--good:#4ADE80;
+  --sh1:0 1px 0 rgba(255,255,255,.04) inset,0 10px 30px -16px rgba(0,0,0,.8);
+  --sh2:0 1px 0 rgba(255,255,255,.05) inset,0 30px 60px -24px rgba(0,0,0,.9);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;color:var(--ink);font:16px/1.55 var(--font);-webkit-font-smoothing:antialiased}
+html,body{margin:0;color:var(--ink);font:16px/1.5 var(--font);-webkit-font-smoothing:antialiased}
 html{background:var(--bg)}
-body{background:var(--ambient),var(--bg);background-attachment:fixed;min-height:100vh;overflow-x:hidden}
-button{font-family:inherit}
+body{background:var(--ambient),var(--bg);background-attachment:fixed;min-height:100vh;overflow-x:hidden;overscroll-behavior-y:none}
+button{font-family:inherit;color:inherit}
+img{max-width:100%}
 :focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.hide{display:none!important}
 
-/* ===== App shell (recedes in 3D when a sheet opens) ===== */
-.shell{transition:transform .38s var(--ease),filter .38s var(--ease),opacity .38s;transform-origin:50% 0}
-body.sheet-open .shell{transform:perspective(1200px) translateZ(-60px) rotateX(2deg);filter:blur(3px) saturate(.8);opacity:.5}
-.top{position:sticky;top:0;z-index:5;background:linear-gradient(var(--bg) 70%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
-header{padding:calc(env(safe-area-inset-top) + 12px) 16px 6px;display:flex;align-items:center;gap:10px;max-width:720px;margin:0 auto}
-header h1{font-size:19px;margin:0;flex:1;font-weight:700;letter-spacing:-.02em;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.logo{width:30px;height:30px;flex:none;position:relative;transform-style:preserve-3d;animation:spin 9s linear infinite}
-.logo i{position:absolute;inset:0;border-radius:50%;border:1.5px solid var(--acc)}
-.logo i:nth-child(1){transform:rotateY(60deg)}.logo i:nth-child(2){transform:rotateY(-60deg)}.logo i:nth-child(3){transform:rotateX(90deg);opacity:.55}
-.logo b{position:absolute;inset:10px;border-radius:50%;background:var(--acc);box-shadow:0 0 14px var(--acc)}
-@keyframes spin{to{transform:rotateY(360deg) rotateX(20deg)}}
-.ib{width:42px;height:42px;flex:none;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:17px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;box-shadow:var(--sh1);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:transform .15s var(--ease)}
-.ib:active{transform:scale(.92)}
-.sbar{padding:2px 16px 8px;max-width:720px;margin:0 auto;animation:drop .25s var(--ease)}
-.sbar input{width:100%}
-@keyframes drop{from{opacity:0;transform:translateY(-8px)}}
-nav{display:flex;gap:6px;overflow-x:auto;padding:6px 16px 12px;scrollbar-width:none;max-width:720px;margin:0 auto}
-nav::-webkit-scrollbar{display:none}
-.chip{flex:none;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:500 14px/1.2 var(--font);cursor:pointer;text-align:left;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:background .2s,color .2s,transform .15s var(--ease),box-shadow .2s}
-.chip:active{transform:scale(.95)}
-.chip.on{background:var(--acc);border-color:transparent;color:var(--accInk);box-shadow:0 8px 20px -8px var(--acc)}
-.chip small{opacity:.6;margin-left:4px}
-main{padding:2px 16px 150px;max-width:720px;margin:0 auto}
+/* ---------- shell ---------- */
+.shell{transition:transform .38s var(--ease),filter .38s,opacity .38s;transform-origin:50% 30%}
+body.sheet-open .shell{transform:scale(.94);filter:blur(2px);opacity:.55}
+#view{max-width:720px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 8px) 16px calc(var(--tabH) + var(--safeB) + 40px);min-height:100vh}
+.topbar{display:flex;align-items:center;gap:10px;padding:8px 0 4px;position:sticky;top:0;z-index:4;background:linear-gradient(var(--bg) 75%,transparent);margin:0 -16px;padding-left:16px;padding-right:16px}
+.topbar h1{flex:1;margin:0;font-size:28px;font-weight:800;letter-spacing:-.03em;line-height:1.15}
+.sub{color:var(--mut);font-size:13.5px;margin:-2px 0 6px}
+.ib{width:42px;height:42px;flex:none;border-radius:14px;border:1px solid var(--line);background:var(--card);font-size:18px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;box-shadow:var(--sh1);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:transform .15s var(--ease);position:relative;text-decoration:none;color:var(--ink)}
+.ib:active{transform:scale(.9)}
+.ib.flat{border:0;box-shadow:none;background:transparent}
+.avatar{width:42px;height:42px;border-radius:50%;background:var(--acc);color:var(--accInk);font-weight:800;font-size:17px;border:0;cursor:pointer;position:relative;box-shadow:0 8px 20px -10px var(--acc)}
+.sdot{position:absolute;right:-1px;bottom:-1px;width:13px;height:13px;border-radius:50%;border:2.5px solid var(--bg);background:var(--faint)}
+.sdot.ok{background:var(--good)}.sdot.busy{background:var(--warm);animation:beat 1s infinite}.sdot.err{background:var(--bad)}
+@keyframes beat{50%{opacity:.4}}
 
-/* ===== Hero: live 3D neural sphere ===== */
-.hero{position:relative;height:210px;border-radius:24px;overflow:hidden;border:1px solid var(--line);background:radial-gradient(120% 90% at 78% 50%,var(--acc2),transparent 60%),var(--card);box-shadow:var(--sh2);margin-top:4px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
-.hero canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:pan-y;cursor:grab}
-.hero-t{position:absolute;left:18px;bottom:16px;right:45%;pointer-events:none}
-.hello{font-size:25px;font-weight:750;letter-spacing:-.025em;line-height:1.15}
-.date{font-size:13px;color:var(--mut);margin-top:4px}
-.kicker{display:inline-flex;gap:6px;align-items:center;font-size:11.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--acc);margin-bottom:8px}
-.kicker::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--acc);box-shadow:0 0 10px var(--acc);animation:beat 2s ease-in-out infinite}
-@keyframes beat{50%{transform:scale(1.6);opacity:.5}}
+/* ---------- tab bar + FAB ---------- */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:8;padding:0 10px calc(var(--safeB) + 8px);pointer-events:none;transition:transform .38s var(--ease)}
+body.sheet-open .tabbar{transform:translateY(130%)}
+.tabbar nav{pointer-events:auto;max-width:520px;margin:0 auto;height:var(--tabH);display:grid;grid-template-columns:1fr 1fr 76px 1fr 1fr;align-items:center;border-radius:24px;background:var(--card);border:1px solid var(--line);box-shadow:var(--sh2);backdrop-filter:blur(24px) saturate(1.5);-webkit-backdrop-filter:blur(24px) saturate(1.5)}
+.tab{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:2px;font:600 11px/1 var(--font);color:var(--faint);cursor:pointer;padding:8px 0;transition:color .2s}
+.tab svg{width:24px;height:24px;transition:transform .25s var(--ease)}
+.tab.on{color:var(--acc)}
+.tab.on svg{transform:translateY(-2px) scale(1.08)}
+.fab{justify-self:center;width:60px;height:60px;border-radius:22px;border:0;background:var(--acc);color:var(--accInk);font-size:30px;font-weight:300;cursor:pointer;transform:translateY(-14px);box-shadow:0 14px 30px -10px var(--acc),0 0 0 6px var(--bg);transition:transform .2s var(--ease)}
+.fab:active{transform:translateY(-14px) scale(.9)}
+.fab svg{width:28px;height:28px}
 
-/* ===== 3D tiles & cards ===== */
-.tilt{transform-style:preserve-3d;transition:transform .35s var(--ease),box-shadow .35s var(--ease)}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px;perspective:900px}
-.stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 4px 10px;text-align:center;box-shadow:var(--sh1);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
-.stat b{display:block;font-size:22px;font-weight:750;letter-spacing:-.02em;transform:translateZ(18px)}
-.stat span{font-size:11.5px;color:var(--mut);transform:translateZ(8px);display:block}
-.stat:first-child b{color:var(--acc)}
-.list{perspective:1000px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:13px 15px;margin:9px 0;display:flex;gap:12px;align-items:flex-start;cursor:pointer;box-shadow:var(--sh1);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);position:relative}
-.card::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:3px;border-radius:0 3px 3px 0;background:var(--t,transparent)}
-.card:active{transform:scale(.985) translateZ(-10px)}
-.card .b{flex:1;min-width:0;transform:translateZ(14px)}
-.card h3{margin:0;font-size:15.5px;font-weight:650;letter-spacing:-.01em;overflow-wrap:anywhere}
-.card p{margin:3px 0 0;color:var(--mut);font-size:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
-.anim .card,.anim .stat,.anim .hero,.anim .box,.anim .msg{animation:rise .55s var(--ease) both;animation-delay:calc(var(--i,0) * 45ms)}
-@keyframes rise{from{opacity:0;transform:perspective(900px) translateY(22px) rotateX(16deg) scale(.97)}}
-.box{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin:8px 0;box-shadow:var(--sh1);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
-.box h3{margin:0 0 6px;letter-spacing:-.01em}
-.box ol{margin:8px 0 12px;padding-left:20px;font-size:14px;color:var(--mut)}
-.done h3{text-decoration:line-through;color:var(--mut)}
-.meta{font-size:12px;color:var(--mut);margin-top:7px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.badge{padding:2px 8px;border-radius:7px;background:var(--acc2);color:var(--acc);font-weight:600}
-.tick{width:22px;height:22px;flex:none;margin-top:1px;accent-color:var(--acc);transform:translateZ(14px)}
-.sec{font-size:11.5px;text-transform:uppercase;letter-spacing:.1em;color:var(--mut);margin:22px 2px 4px;font-weight:650;display:flex;align-items:center;gap:10px}
-.sec::after{content:"";flex:1;height:1px;background:var(--line)}
-.row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
-.empty{color:var(--mut);text-align:center;padding:30px 10px;font-size:14.5px}
-.banner{background:var(--card);border:1px solid var(--warm);border-radius:14px;padding:8px 8px 8px 12px;font-size:14px;margin:10px 0 0;display:flex;gap:8px;align-items:center;box-shadow:var(--sh1)}
+/* ---------- cards & sections ---------- */
+.sec{display:flex;align-items:center;justify-content:space-between;margin:24px 2px 8px}
+.sec h2{margin:0;font-size:17px;font-weight:750;letter-spacing:-.015em}
+.sec a,.link{color:var(--acc);font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;background:none;border:0;padding:0}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh1);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:14px 16px}
+.panel + .panel{margin-top:10px}
+.sw{position:relative;margin:8px 0;border-radius:var(--r);overflow:hidden}
+.sw-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 20px;font-weight:700;font-size:14px;color:#fff;border-radius:var(--r);opacity:0}
+.sw-bg .l{color:var(--accInk)}
+.sw.swl .sw-bg{opacity:1;background:var(--acc)}
+.sw.swr .sw-bg{opacity:1;background:var(--warm)}
+.sw.swl .sw-bg .r,.sw.swr .sw-bg .l{visibility:hidden}
+.card{position:relative;background:var(--solid);border:1px solid var(--line);border-radius:var(--r);padding:13px 14px;display:flex;gap:12px;align-items:flex-start;cursor:pointer;box-shadow:var(--sh1);transition:transform .3s var(--ease);touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.card.drag{transition:none}
+.card .b{flex:1;min-width:0}
+.card h3{margin:2px 0 0;font-size:15.5px;font-weight:650;letter-spacing:-.01em;overflow-wrap:anywhere;line-height:1.35}
+.card p{margin:3px 0 0;color:var(--mut);font-size:14px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.card .thumb{width:62px;height:62px;border-radius:12px;object-fit:cover;flex:none;background:var(--line)}
+.kick{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:650;color:var(--mut);letter-spacing:.02em;text-transform:uppercase}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--c,var(--faint));flex:none}
+.meta{font-size:12px;color:var(--faint);margin-top:7px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.due{padding:1px 7px;border-radius:6px;background:var(--acc2);color:var(--acc);font-weight:700;text-transform:none;letter-spacing:0}
+.due.late{background:rgba(217,59,59,.12);color:var(--bad)}
+.done h3{text-decoration:line-through;color:var(--faint)}
+.tick{appearance:none;-webkit-appearance:none;width:24px;height:24px;flex:none;margin:1px 0 0;border-radius:8px;border:2px solid var(--faint);cursor:pointer;display:grid;place-items:center;transition:all .2s var(--ease);background:transparent}
+.tick:checked{background:var(--acc);border-color:var(--acc)}
+.tick:checked::after{content:"";width:6px;height:11px;border:solid var(--accInk);border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.prio{color:var(--bad);font-weight:800}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid .sw{margin:0}
+.grid .card{flex-direction:column;height:100%}
+.grid .card .thumb{width:100%;height:96px;order:-1}
+.grid .card p{-webkit-line-clamp:3}
+.hscroll{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:2px 16px 8px;scrollbar-width:none}
+.hscroll::-webkit-scrollbar{display:none}
+.mini{flex:none;width:200px;scroll-snap-align:start;background:var(--solid);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;cursor:pointer;box-shadow:var(--sh1);display:flex;flex-direction:column;gap:6px;min-height:118px}
+.mini h4{margin:0;font-size:15px;font-weight:700;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mini p{margin:0;color:var(--mut);font-size:13px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.empty{color:var(--mut);text-align:center;padding:34px 16px;font-size:14.5px}
+.empty b{display:block;font-size:34px;margin-bottom:6px}
+.anim > *{animation:rise .5s var(--ease) both;animation-delay:calc(var(--i,0) * 40ms)}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}}
 
-/* ===== Controls ===== */
-input,select,textarea{font:inherit;color:var(--ink);background:var(--solid);border:1px solid var(--line);border-radius:14px;padding:11px 13px;outline:none;transition:border-color .2s,box-shadow .2s}
+/* ---------- home ---------- */
+.hero{position:relative;height:190px;border-radius:24px;overflow:hidden;border:1px solid var(--line);background:radial-gradient(120% 90% at 78% 50%,var(--acc2),transparent 60%),var(--card);box-shadow:var(--sh2);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:pan-y}
+.hero-t{position:absolute;left:18px;top:16px;bottom:16px;right:44%;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none}
+.wx{display:flex;align-items:center;gap:10px}
+.wx .ic{font-size:34px;line-height:1}
+.wx b{font-size:30px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.wx small{display:block;color:var(--mut);font-size:12.5px;margin-top:3px}
+.kicker{display:inline-flex;gap:6px;align-items:center;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--acc)}
+.kicker::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--acc);box-shadow:0 0 10px var(--acc)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:11px 4px 9px;text-align:center;box-shadow:var(--sh1);cursor:pointer;border-width:1px}
+.stat b{display:block;font-size:21px;font-weight:800;letter-spacing:-.02em}
+.stat span{font-size:11px;color:var(--mut);font-weight:550}
+.qa{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.qa button{border:1px solid var(--line);background:var(--card);border-radius:16px;padding:12px 4px 10px;display:flex;flex-direction:column;align-items:center;gap:5px;font:600 12px/1.1 var(--font);cursor:pointer;box-shadow:var(--sh1);transition:transform .15s var(--ease)}
+.qa button:active{transform:scale(.94)}
+.qa i{font-style:normal;font-size:22px;width:40px;height:40px;border-radius:13px;display:grid;place-items:center;background:var(--acc2)}
+.banner{display:flex;gap:10px;align-items:center;background:var(--card);border:1px solid var(--warm);border-radius:16px;padding:9px 9px 9px 14px;margin-top:10px;font-size:14px;box-shadow:var(--sh1)}
+.banner span{flex:1}
+
+/* ---------- controls ---------- */
+input,select,textarea{font:inherit;color:var(--ink);background:var(--solid);border:1px solid var(--line);border-radius:14px;padding:11px 13px;outline:none;transition:border-color .2s,box-shadow .2s;width:100%}
+input[type=checkbox]{width:auto}
 input:focus,select:focus,textarea:focus{border-color:var(--acc);box-shadow:0 0 0 4px var(--acc2)}
-.btn{border:0;border-radius:14px;padding:11px 16px;background:var(--acc);color:var(--accInk);font:650 15px/1.2 var(--font);cursor:pointer;box-shadow:0 10px 24px -12px var(--acc);transition:transform .15s var(--ease),filter .2s}
+.search{position:relative;margin:4px 0 10px}
+.search input{padding-left:40px;border-radius:16px;background:var(--card);box-shadow:var(--sh1)}
+.search::before{content:"";position:absolute;left:14px;top:50%;width:14px;height:14px;margin-top:-9px;border:2px solid var(--faint);border-radius:50%}
+.search::after{content:"";position:absolute;left:27px;top:50%;width:7px;height:2px;margin-top:5px;background:var(--faint);transform:rotate(45deg)}
+.btn{border:0;border-radius:14px;padding:12px 18px;background:var(--acc);color:var(--accInk);font:700 15px/1.2 var(--font);cursor:pointer;box-shadow:0 10px 24px -12px var(--acc);transition:transform .15s var(--ease);display:inline-flex;align-items:center;justify-content:center;gap:6px}
 .btn:active{transform:scale(.96)}
-.btn.g{background:var(--card);color:var(--ink);border:1px solid var(--line);box-shadow:var(--sh1);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.btn.g{background:var(--solid);color:var(--ink);border:1px solid var(--line);box-shadow:var(--sh1)}
 .btn.r{background:var(--bad);color:#fff;box-shadow:none}
+.btn.sm{padding:8px 12px;font-size:13.5px;border-radius:12px}
+.btn.wide{width:100%}
 .btn:disabled{opacity:.5}
-
-/* ===== Floating capture dock ===== */
-.capture{position:fixed;left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom) + 10px);z-index:6;transition:transform .38s var(--ease),opacity .3s}
-body.sheet-open .capture{transform:translateY(140%);opacity:0}
-.capture form{display:flex;gap:6px;max-width:700px;margin:0 auto;padding:6px;border-radius:22px;background:var(--card);border:1px solid var(--line);box-shadow:var(--sh2);backdrop-filter:blur(22px) saturate(1.4);-webkit-backdrop-filter:blur(22px) saturate(1.4);align-items:center}
-.capture input{flex:1;min-width:0;border:0;background:transparent;box-shadow:none;padding:10px 6px}
-.capture input:focus{box-shadow:none}
-.capture select{width:52px;padding:9px 4px;border-radius:14px;background:var(--acc2);border:0;text-align:center}
-.capture .ib{box-shadow:none;border:0;background:transparent}
-#capBtn{width:44px;height:44px;border-radius:16px;padding:0;font-size:20px;flex:none}
-body[data-screen=ai] #capType{display:none}
-.pend{display:flex;gap:6px;flex-wrap:wrap;max-width:700px;margin:0 auto 8px}
-.pend:empty{display:none}
-.pc{font-size:13px;padding:5px 4px 5px 10px;border-radius:11px;background:var(--card);border:1px solid var(--line);display:flex;gap:4px;align-items:center;box-shadow:var(--sh1);backdrop-filter:blur(14px);animation:rise .35s var(--ease)}
-.pc button{border:0;background:none;color:var(--mut);font-size:13px;padding:0 6px;cursor:pointer}
-
-/* ===== Sheets (3D slide-up) ===== */
-.sheet{position:fixed;inset:0;background:var(--ambient),var(--bg);z-index:10;display:flex;flex-direction:column;visibility:hidden;opacity:0;pointer-events:none;transform:perspective(1400px) translateY(60px) rotateX(-10deg) scale(.96);transform-origin:50% 100%;transition:transform .42s var(--ease),opacity .3s,visibility 0s .42s}
-.sheet.open{visibility:visible;opacity:1;pointer-events:auto;transform:none;transition:transform .42s var(--ease),opacity .3s,visibility 0s}
-.sh-top{display:flex;gap:7px;align-items:center;padding:calc(env(safe-area-inset-top) + 10px) 12px 10px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
-.sh-top::-webkit-scrollbar{display:none}
-.sh-body{flex:1;overflow:auto;padding:14px 18px 70px;width:100%;max-width:720px;margin:0 auto}
-#eTitle{width:100%;font-size:24px;font-weight:750;letter-spacing:-.02em;border:0;background:transparent;padding:6px 0;border-radius:0;box-shadow:none}
-#eBody{width:100%;min-height:50vh;resize:vertical;border:0;background:transparent;padding:4px 0;line-height:1.7;border-radius:0;box-shadow:none}
-.prev,.msg{overflow-wrap:anywhere}
-.prev{animation:fade .3s var(--ease)}
-@keyframes fade{from{opacity:0;transform:translateY(6px)}}
-.prev h1{font-size:26px;margin:4px 0 12px;line-height:1.2;letter-spacing:-.025em}
-.prev h2,.msg h2{font-size:19px;margin:16px 0 6px;letter-spacing:-.015em}
-.prev h3,.msg h3{font-size:17px;margin:12px 0 4px}
-.prev h4,.msg h4{font-size:15px;margin:10px 0 4px}
-.prev p,.msg p{margin:4px 0}
-.prev{line-height:1.7}
-.prev ul,.msg ul{padding-left:22px;margin:4px 0}
-li.ck{list-style:none;margin-left:-22px;display:flex;gap:9px;align-items:flex-start}
-li.ck input{width:20px;height:20px;margin-top:4px;accent-color:var(--acc);flex:none;padding:0}
-code{background:var(--acc2);padding:1px 6px;border-radius:6px;font-size:.9em}
-.prev a,.msg.a a{color:var(--acc)}
-a.wl{text-decoration:none;border-bottom:1.5px dashed var(--acc);cursor:pointer}
-a.tg{text-decoration:none;cursor:pointer;font-weight:600}
-.gap{height:8px}
-.back{margin-top:28px;padding-top:4px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.chips{display:flex;gap:7px;overflow-x:auto;margin:0 -16px;padding:4px 16px 8px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);font:600 13.5px/1.2 var(--font);cursor:pointer;white-space:nowrap;transition:background .2s,color .2s,transform .15s var(--ease)}
+.chip:active{transform:scale(.95)}
+.chip.on{background:var(--ink);border-color:transparent;color:var(--bg)}
+.chip small{opacity:.6;margin-left:4px}
+.seg{display:flex;background:var(--line);border-radius:12px;padding:3px;gap:2px}
+.seg button{flex:1;border:0;background:none;padding:7px 10px;border-radius:9px;font:600 13px/1.2 var(--font);cursor:pointer;color:var(--mut)}
+.seg button.on{background:var(--solid);color:var(--ink);box-shadow:var(--sh1)}
+.toolrow{display:flex;align-items:center;gap:8px;margin:2px 0 4px}
+.toolrow .seg{flex:none}
+.toolrow .grow{flex:1}
+label.sw2{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;font-size:15px;border-bottom:1px solid var(--line)}
+label.sw2 input{appearance:none;-webkit-appearance:none;width:46px;height:28px;border-radius:99px;background:var(--line);position:relative;cursor:pointer;transition:background .2s;flex:none;border:0;padding:0}
+label.sw2 input::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .25s var(--ease)}
+label.sw2 input:checked{background:var(--acc)}
+label.sw2 input:checked::after{transform:translateX(18px)}
+.swatches{display:flex;gap:10px}
+.swatches button{width:34px;height:34px;border-radius:50%;border:3px solid transparent;cursor:pointer;background:var(--c)}
+.swatches button.on{border-color:var(--ink)}
+.list-rows > div{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.list-rows > div:last-child{border-bottom:0}
+.list-rows > div span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mut{color:var(--mut);font-size:14px}
+.small{font-size:12.5px;color:var(--faint)}
 
-/* ===== Claude chat ===== */
-.chat{display:flex;flex-direction:column;gap:12px;margin-top:6px}
-.msg{max-width:88%;padding:11px 14px;border-radius:20px;font-size:15px;line-height:1.6}
-.msg.u{align-self:flex-end;background:var(--acc);color:var(--accInk);border-bottom-right-radius:6px;white-space:pre-wrap;box-shadow:0 12px 26px -16px var(--acc)}
-.msg.a{align-self:flex-start;background:var(--card);border:1px solid var(--line);border-bottom-left-radius:6px;box-shadow:var(--sh1);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
-.msg.err{border-color:var(--bad)}
-.acts{font-size:13px;color:var(--mut);margin-top:9px;border-top:1px dashed var(--line);padding-top:7px;display:grid;gap:3px}
-.think{display:flex;align-items:center;gap:10px;color:var(--mut)}
-.think span:last-child{animation:pulse 1.4s ease-in-out infinite}
-@keyframes pulse{50%{opacity:.45}}
-.orb{width:22px;height:22px;position:relative;transform-style:preserve-3d;animation:spin 2.4s linear infinite;flex:none}
-.orb::before,.orb::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--acc)}
-.orb::before{transform:rotateX(70deg)}.orb::after{transform:rotateY(70deg);border-color:var(--warm)}
-.orb.lg{width:70px;height:70px;margin:6px auto 14px;animation-duration:7s}
-.orb.lg::before,.orb.lg::after{border-width:2.5px}
-.orb i{position:absolute;inset:30%;border-radius:50%;background:var(--acc);box-shadow:0 0 20px var(--acc)}
-.ai-intro{text-align:center}
-.ai-intro p{max-width:440px;margin:0 auto}
-.files{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+/* ---------- sheets ---------- */
+.sheet{position:fixed;inset:0;background:var(--ambient),var(--bg);z-index:10;display:flex;flex-direction:column;visibility:hidden;opacity:0;pointer-events:none;transform:translateY(40px) scale(.98);transition:transform .42s var(--ease),opacity .3s,visibility 0s .42s}
+.sheet.open{visibility:visible;opacity:1;pointer-events:auto;transform:none;transition:transform .42s var(--ease),opacity .3s,visibility 0s}
+.sh-top{display:flex;gap:8px;align-items:center;padding:calc(env(safe-area-inset-top) + 10px) 12px 10px;border-bottom:1px solid var(--line)}
+.sh-top b{flex:1;font-size:17px;text-align:center}
+.sh-body{flex:1;overflow:auto;padding:14px 18px 40px;width:100%;max-width:720px;margin:0 auto}
+.bs{position:fixed;inset:0;z-index:12;visibility:hidden;transition:visibility 0s .35s}
+.bs.open{visibility:visible;transition:none}
+.bs .bd{position:absolute;inset:0;background:rgba(0,0,0,.45);opacity:0;transition:opacity .3s}
+.bs.open .bd{opacity:1}
+.bs .pnl{position:absolute;left:0;right:0;bottom:0;max-height:92vh;overflow:auto;background:var(--solid);border-radius:26px 26px 0 0;padding:8px 18px calc(var(--safeB) + 18px);transform:translateY(105%);transition:transform .38s var(--ease);max-width:720px;margin:0 auto;box-shadow:var(--sh2)}
+.bs.open .pnl{transform:none}
+.grab{width:42px;height:5px;border-radius:9px;background:var(--line);margin:4px auto 12px}
+.bs h3{margin:2px 0 12px;font-size:18px;letter-spacing:-.01em}
+.acts button{display:flex;align-items:center;gap:14px;width:100%;border:0;background:none;padding:14px 4px;font:600 16px/1.2 var(--font);cursor:pointer;border-bottom:1px solid var(--line);text-align:left}
+.acts button:last-child{border-bottom:0}
+.acts button i{font-style:normal;font-size:20px;width:26px;text-align:center}
+.acts button.danger{color:var(--bad)}
+#capText{min-height:120px;resize:none;font-size:17px;border:0;background:transparent;padding:4px 0;box-shadow:none}
+#capText:focus{box-shadow:none}
+.optlabel{font-size:12px;font-weight:700;color:var(--faint);text-transform:uppercase;letter-spacing:.08em;margin:12px 0 2px}
+.pend{display:flex;gap:6px;flex-wrap:wrap}
+.pc{font-size:13px;padding:5px 4px 5px 10px;border-radius:11px;background:var(--acc2);display:flex;gap:4px;align-items:center}
+.pc button{border:0;background:none;font-size:13px;padding:0 6px;cursor:pointer}
+
+/* ---------- editor ---------- */
+.ed-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.ed-chips select,.ed-chips input{width:auto;padding:7px 10px;border-radius:12px;font-size:14px;background:var(--card)}
+#eTitle{font-size:26px;font-weight:800;letter-spacing:-.025em;border:0;background:transparent;padding:6px 0;border-radius:0;box-shadow:none}
+#eBody{min-height:46vh;resize:none;border:0;background:transparent;padding:4px 0;line-height:1.7;border-radius:0;box-shadow:none}
+.edbar{display:flex;gap:4px;overflow-x:auto;padding:8px 12px calc(var(--safeB) + 8px);border-top:1px solid var(--line);background:var(--solid);scrollbar-width:none}
+.edbar::-webkit-scrollbar{display:none}
+.edbar button{flex:none;min-width:44px;height:40px;border:0;border-radius:11px;background:var(--bg);font:700 15px/1 var(--font);cursor:pointer}
+.edbar button:active{background:var(--acc2)}
+.prev,.prev *{overflow-wrap:anywhere}
+.prev{line-height:1.7;animation:fade .25s var(--ease)}
+@keyframes fade{from{opacity:0;transform:translateY(5px)}}
+.prev h1{font-size:28px;margin:4px 0 12px;line-height:1.2;letter-spacing:-.025em}
+.prev h2{font-size:20px;margin:18px 0 6px}.prev h3{font-size:17px;margin:14px 0 4px}.prev h4{font-size:15px;margin:10px 0 4px}
+.prev p{margin:4px 0}.prev ul{padding-left:22px;margin:4px 0}
+li.ck{list-style:none;margin-left:-22px;display:flex;gap:10px;align-items:flex-start}
+li.ck .tick{width:21px;height:21px;margin-top:4px;border-radius:7px}
+code{background:var(--acc2);padding:1px 6px;border-radius:6px;font-size:.9em}
+.prev a{color:var(--acc)}
+a.wl{text-decoration:none;border-bottom:1.5px dashed var(--acc);cursor:pointer}
+a.tg{text-decoration:none;cursor:pointer;font-weight:650}
+.gap{height:8px}
+.lp{display:flex;gap:12px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--card);margin:12px 0;cursor:pointer;text-decoration:none;color:var(--ink)}
+.lp img{width:96px;object-fit:cover;flex:none;background:var(--line)}
+.lp div{padding:10px 12px 10px 0;min-width:0}
+.lp b{display:block;font-size:14.5px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.lp small{display:block;color:var(--mut);font-size:12.5px;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.lp em{font-style:normal;font-size:11.5px;color:var(--acc);font-weight:700}
+.files{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
 .fi{position:relative}
-.fi img,.fi video{max-width:150px;max-height:150px;border-radius:12px;display:block;object-fit:cover;background:var(--line);cursor:pointer;box-shadow:var(--sh1)}
+.fi img,.fi video{max-width:150px;max-height:150px;border-radius:12px;display:block;object-fit:cover;background:var(--line)}
 #eFiles .fi img,#eFiles .fi video{max-width:100%;max-height:380px}
 .fi.doc a{display:inline-block;padding:9px 12px;border:1px solid var(--line);border-radius:12px;background:var(--solid);color:var(--ink);text-decoration:none;font-size:14px}
 .fx{position:absolute;top:-7px;right:-7px;width:24px;height:24px;border-radius:50%;border:0;background:var(--bad);color:#fff;font-size:12px;cursor:pointer}
-.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 92px);transform:translate(-50%,12px) scale(.96);background:var(--solid);color:var(--ink);border:1px solid var(--line);padding:10px 16px;border-radius:14px;opacity:0;pointer-events:none;transition:opacity .25s,transform .35s var(--ease);z-index:20;font-size:14px;font-weight:550;max-width:90vw;text-align:center;box-shadow:var(--sh2)}
-.toast.show{opacity:1;transform:translate(-50%,0) scale(1)}
-label.sw{display:flex;gap:10px;align-items:center;font-size:15px}
-label.sw input{width:22px;height:22px;accent-color:var(--acc)}
-#settings .sh-body > .sec:first-child{margin-top:6px}
 
+/* ---------- discover ---------- */
+.wxbig{display:flex;align-items:center;gap:14px}
+.wxbig .ic{font-size:52px;line-height:1}
+.wxbig b{font-size:42px;font-weight:800;letter-spacing:-.04em;line-height:1}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:14px;text-align:center;font-size:12px}
+.days div{display:flex;flex-direction:column;gap:3px;align-items:center}
+.days i{font-style:normal;font-size:20px}
+.days span{color:var(--mut)}
+.fx-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center}
+.fx-out{font-size:26px;font-weight:800;letter-spacing:-.02em;margin-top:10px}
+.news a{display:flex;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none;cursor:pointer;align-items:flex-start}
+.news a:last-child{border-bottom:0}
+.news a div{flex:1;min-width:0}
+.news a b{display:block;font-size:15px;font-weight:600;line-height:1.35}
+.news a small{color:var(--faint);font-size:12px}
+.news button{flex:none;border:0;background:var(--acc2);color:var(--acc);border-radius:10px;width:36px;height:36px;cursor:pointer;font-size:16px}
+.res a{display:block;padding:11px 0;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none;cursor:pointer}
+.res a b{display:block;font-size:15px}
+.res a small{color:var(--mut);font-size:13px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* ---------- account ---------- */
+.prof{display:flex;align-items:center;gap:14px;margin:4px 0 6px}
+.prof .avatar{width:56px;height:56px;font-size:22px}
+.prof b{display:block;font-size:18px}
+.toast{position:fixed;left:50%;bottom:calc(var(--tabH) + var(--safeB) + 26px);transform:translate(-50%,12px) scale(.96);background:var(--ink);color:var(--bg);padding:11px 14px 11px 16px;border-radius:14px;opacity:0;pointer-events:none;transition:opacity .25s,transform .35s var(--ease);z-index:30;font-size:14px;font-weight:600;max-width:92vw;display:flex;gap:14px;align-items:center;box-shadow:var(--sh2)}
+.toast.show{opacity:1;transform:translate(-50%,0) scale(1);pointer-events:auto}
+.toast button{border:0;background:none;color:var(--acc);font:800 14px/1 var(--font);cursor:pointer;padding:4px}
+:root:not(.dark) .toast button{filter:brightness(1.6)}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
-<body data-screen="home">
-<div class="shell">
-<div class="top">
-  <header>
-    <div class="logo" aria-hidden="true"><i></i><i></i><i></i><b></b></div>
-    <h1 id="appName">Second Brain</h1>
-    <button class="ib" data-act="search" aria-label="Search">🔍</button>
-    <button class="ib" data-act="settings" aria-label="Settings">⚙️</button>
-  </header>
-  <div class="sbar" id="sbar" hidden><input id="q" type="search" placeholder="Search everything…" autocomplete="off"></div>
-  <nav id="nav"></nav>
-</div>
+<body>
+<div class="shell"><main id="view"></main></div>
 
-<main id="view"></main>
-</div>
+<div class="tabbar"><nav>
+  <button class="tab" data-tab="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Home</button>
+  <button class="tab" data-tab="library"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h6v16H4zM14 4l6 1.5-3.5 14.5-6-1.5"/></svg>Notes</button>
+  <button class="fab" data-act="capture" aria-label="New"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+  <button class="tab" data-tab="tasks"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="m8 12 3 3 5-6"/></svg>Tasks</button>
+  <button class="tab" data-tab="discover"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3z"/></svg>Discover</button>
+</nav></div>
 
-<div class="capture">
-  <div class="pend" id="pend"></div>
-  <form id="cap">
-    <select id="capType" aria-label="Type"></select>
-    <label class="ib" for="pick" aria-label="Attach">📎</label>
-    <input id="capIn" placeholder="Capture a thought…" autocomplete="off" enterkeyhint="send">
-    <button class="btn" id="capBtn" aria-label="Send">＋</button>
-  </form>
-  <input type="file" id="pick" multiple accept="image/*,video/*,application/pdf,.pdf,.txt,.md,.csv,.json,.html" hidden>
-</div>
+<!-- quick capture -->
+<div class="bs" id="capSheet"><div class="bd" data-act="closeBs"></div><div class="pnl">
+  <div class="grab"></div>
+  <textarea id="capText" placeholder="What's on your mind? Paste a link, write a task, an idea…"></textarea>
+  <div class="pend" id="capFiles"></div>
+  <div class="optlabel">Type</div><div class="chips" id="capTypes"></div>
+  <div id="capTaskOpts" class="hide"><div class="optlabel">Due</div><div class="chips" id="capDue"></div></div>
+  <div class="optlabel">Folder</div><div class="chips" id="capPara"></div>
+  <div class="row" style="margin-top:14px">
+    <label class="ib" for="capPick" aria-label="Attach file">📎</label>
+    <label class="ib" for="capCam" aria-label="Take photo">📷</label>
+    <span style="flex:1"></span>
+    <button class="btn" data-act="capSave">Save</button>
+  </div>
+  <input type="file" id="capPick" multiple accept="image/*,video/*,application/pdf,.pdf,.txt,.md,.csv,.json" hidden>
+  <input type="file" id="capCam" accept="image/*" capture="environment" hidden>
+  <input type="date" id="capDate" class="hide">
+</div></div>
 
+<!-- action sheet -->
+<div class="bs" id="actSheet"><div class="bd" data-act="closeBs"></div><div class="pnl"><div class="grab"></div><h3 id="actTitle"></h3><div class="acts" id="actList"></div></div></div>
+
+<!-- editor -->
 <div class="sheet" id="editor">
   <div class="sh-top">
-    <button class="ib" data-act="close" aria-label="Back">←</button>
-    <div style="flex:1"></div>
-    <button class="ib" data-act="aiNote" aria-label="Organize with Claude">✨</button>
-    <button class="ib" data-act="addFile" aria-label="Attach file">📎</button>
-    <button class="ib" data-act="pin" id="bPin" aria-label="Pin">📌</button>
-    <button class="ib" data-act="archive" id="bArc" aria-label="Archive">🗄️</button>
-    <button class="ib" data-act="toggle" id="bTog" aria-label="Edit or preview">✏️</button>
-    <button class="ib" data-act="del" aria-label="Delete">🗑️</button>
+    <button class="ib flat" data-act="close" aria-label="Back">←</button>
+    <span style="flex:1"></span>
+    <button class="ib flat" data-act="toggle" id="bTog" aria-label="Edit or read">✏️</button>
+    <button class="ib flat" data-act="pin" id="bPin" aria-label="Pin">📌</button>
+    <button class="ib flat" data-act="noteMore" aria-label="More">⋯</button>
   </div>
   <div class="sh-body">
-    <div class="row"><select id="eType"></select><select id="ePara"></select></div>
-    <div id="eEdit">
-      <input id="eTitle" placeholder="Title">
-      <textarea id="eBody" placeholder="Write anything…&#10;&#10;#tags · [[Link to another note]] · - [ ] checklist · # heading · **bold**"></textarea>
-    </div>
+    <div class="ed-chips"><select id="eType"></select><select id="ePara"></select><input type="date" id="eDue" class="hide"></div>
+    <div id="eEdit"><input id="eTitle" placeholder="Title"><textarea id="eBody" placeholder="Start writing…"></textarea></div>
     <div id="ePrev" class="prev"></div>
+    <div id="ePreview"></div>
     <div id="eFiles"></div>
     <div id="eBack"></div>
-    <div class="meta" id="eMeta"></div>
+    <div class="small" id="eMeta"></div>
   </div>
-  <input type="file" id="noteFile" multiple accept="image/*,video/*,application/pdf,.pdf,.txt,.md,.csv,.json,.html" hidden>
+  <div class="edbar" id="edbar">
+    <button data-md="# ">H</button><button data-md="**|**"><b>B</b></button><button data-md="- ">•</button><button data-md="- [ ] ">☑</button><button data-md="[[|]]">[[ ]]</button><button data-md="#">#</button>
+    <button data-act="addFile">📎</button><button data-act="addPhoto">📷</button>
+  </div>
+  <input type="file" id="noteFile" multiple accept="image/*,video/*,application/pdf,.pdf,.txt,.md,.csv,.json" hidden>
+  <input type="file" id="notePhoto" accept="image/*" capture="environment" hidden>
 </div>
 
-<div class="sheet" id="settings">
-  <div class="sh-top">
-    <button class="ib" data-act="closeSettings" aria-label="Back">←</button>
-    <b style="flex:1">Settings</b>
-  </div>
-  <div class="sh-body">
-    <div class="sec">🤖 Claude connection</div>
-    <p class="mut">Paste an API key from console.anthropic.com (Settings → API Keys). It is billed per use, separately from a Claude.ai subscription. The key stays on this phone and is never included in backups.</p>
-    <input id="sKey" type="password" placeholder="sk-ant-…" autocomplete="off" style="width:100%">
-    <div class="row">
-      <select id="sModel">
-        <option value="claude-sonnet-5-5">Sonnet 5.5 — balanced (recommended)</option>
-        <option value="claude-haiku-5-5">Haiku 5.5 — fastest, cheapest</option>
-        <option value="claude-opus-5-5">Opus 5.5 — smartest, costs more</option>
-      </select>
-      <button class="btn g" data-act="test">Test connection</button>
-    </div>
-    <div class="sec">🧠 What Claude has learned about you</div>
-    <p class="mut">Claude updates this itself as it learns your habits. You can edit it any time.</p>
-    <textarea id="sMemory" rows="7" style="width:100%" placeholder="Empty — Claude will fill this as it learns."></textarea>
-    <label class="sw" style="margin-top:8px"><input type="checkbox" id="sLearn"> Learn from my actions in the app</label>
-    <div class="row"><button class="btn g" data-act="clearChat">Clear chat</button><button class="btn g" data-act="clearLog">Clear action history</button></div>
-    <div class="sec">⬆️ Updates</div>
-    <p class="mut" id="sVer"></p>
-    <label class="sw"><input type="checkbox" id="sAuto"> Download updates automatically</label>
-    <div class="row"><button class="btn" data-act="checkUpd">Check for updates</button><button class="btn g" data-act="resetUpd">Use built-in version</button></div>
-    <div class="sec">App</div>
-    <input id="sName" style="width:100%" maxlength="40" placeholder="App name">
-    <div class="row"><select id="sTheme"><option value="auto">Theme: follow phone</option><option value="light">Light</option><option value="dark">Dark</option></select></div>
-    <div class="sec">Backup</div>
-    <p class="mut">Everything lives only on this phone. Export a backup every week and keep it in Google Drive or email it to yourself. Backups include notes, files, chat and memory.</p>
-    <p class="mut" id="sLast"></p>
-    <div class="row">
-      <button class="btn" data-act="export">💾 Export backup</button>
-      <button class="btn g" data-act="import">📂 Import backup</button>
-      <button class="btn g" data-act="md">📄 Export Markdown</button>
-    </div>
-    <input type="file" id="file" accept=".json,application/json" hidden>
-    <div class="sec">Storage</div>
-    <p class="mut" id="sStats"></p>
-    <div class="sec">Danger zone</div>
-    <button class="btn r" data-act="reset">Erase everything</button>
-    <p class="mut" style="margin-top:24px" id="sAbout"></p>
-  </div>
+<!-- account & settings -->
+<div class="sheet" id="me">
+  <div class="sh-top"><button class="ib flat" data-act="closeMe" aria-label="Back">←</button><b>Account &amp; settings</b><span style="width:42px"></span></div>
+  <div class="sh-body" id="meBody"></div>
 </div>
-
-<div class="toast" id="toast"></div>
+<input type="file" id="importFile" accept=".json,application/json" hidden>
+<div class="toast" id="toast"><span></span><button></button></div>
 
 <script>
-const APP_VERSION = '3.0.0';
+const APP_VERSION = '4.0.0';
 const REPO = 'khalil203/second-brain', RAW = `https://raw.githubusercontent.com/${REPO}/main/`, APK_URL = `https://github.com/${REPO}/raw/main/dist/second-brain.apk`;
+const SB_URL = 'https://kshhznqxudcaipizpxvv.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzaGh6bnF4dWRjYWlwaXpweHZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMxNzYwODYsImV4cCI6MjEwODc1MjA4Nn0._6bQRQh3jDap48iw_tfNnfGAkOPlWYeU4wHm_4BFmzU';
 const $ = s => document.querySelector(s);
 const NATIVE = () => !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
-const PARA = [['inbox','📥 Inbox'],['projects','🚀 Projects'],['areas','🧭 Areas'],['resources','📚 Resources'],['archive','🗄️ Archive']];
-const TYPES = [['note','📝 Note'],['task','✅ Task'],['idea','💡 Idea'],['link','🔗 Link'],['person','👤 Person'],['journal','📔 Journal']];
-const VIEWS = [['home','🏠 Home'],['ai','🤖 Claude'],['inbox','📥 Inbox'],['projects','🚀 Projects'],['areas','🧭 Areas'],['resources','📚 Resources'],['tasks','✅ Tasks'],['journal','📔 Journal'],['tags','🏷️ Tags'],['archive','🗄️ Archive']];
-const HINT = {inbox:'Unsorted captures — move them somewhere',projects:'Goals with a finish line',areas:'Ongoing responsibilities',resources:'Reference & interests',archive:'Done or inactive'};
+
+const PARA = [['inbox','Inbox','📥'],['projects','Projects','🚀'],['areas','Areas','🧭'],['resources','Resources','📚'],['archive','Archive','🗄️']];
+const TYPES = [['note','Note','📝','#8F97A6'],['task','Task','✅','var(--acc)'],['idea','Idea','💡','var(--warm)'],['link','Link','🔗','#5EA2FF'],['person','Person','👤','#C38BFF'],['journal','Journal','📔','#FF7FA8']];
 const PK = PARA.map(p=>p[0]), TK = TYPES.map(t=>t[0]);
+const TYPE = Object.fromEntries(TYPES.map(t=>[t[0],{l:t[1],i:t[2],c:t[3]}])), PAR = Object.fromEntries(PARA.map(p=>[p[0],{l:p[1],i:p[2]}]));
 const TAGRE = /(^|\s)#([\p{L}\p{M}\p{N}_-]+)/gu;
-const ASKS = ['✨ Organize my inbox','📅 Plan my day from my open tasks','🔎 What did I save this week?','🧠 Learn from my recent actions','💡 Find connections between my notes'];
+const URLRE = /https?:\/\/[^\s<>)"']+/g;
+const ACCENTS = {mint:['#2EE6B6','#0E9E7C','#04231B'], blue:['#6AA8FF','#2563EB','#06183A'], amber:['#FFB547','#B86E00','#2A1A00'], rose:['#FF7FA8','#D6336C','#2E0716'], violet:['#B49BFF','#6D4AE0','#160B33']};
+const FEEDS = [{name:'World', url:'https://feeds.bbci.co.uk/news/world/rss.xml'},{name:'Asia', url:'https://feeds.bbci.co.uk/news/world/asia/rss.xml'},{name:'Tech', url:'https://feeds.bbci.co.uk/news/technology/rss.xml'},{name:'Startups', url:'https://techcrunch.com/feed/'},{name:'Business', url:'https://feeds.bbci.co.uk/news/business/rss.xml'}];
+const CURR = ['THB','USD','EUR','TND','GBP','JPY','CNY','SGD','MYR','AED','AUD'];
 
-let db = {notes:[], files:{}, chat:[], log:[], memory:'', settings:{name:'Second Brain', theme:'auto', lastExport:0, init:0, autoUpdate:true, lastCheck:0, apiKey:'', model:'claude-sonnet-5-5', learn:true}};
-let state = {view:'home', tag:null, q:''};
-let cur = null, editMode = true, openSnap = null, pending = [], busy = false;
+let db = {notes:[], files:{}, cache:{},
+  settings:{name:'Second Brain', theme:'auto', accent:'mint', lastExport:0, init:0, autoUpdate:true, lastCheck:0, city:'Bangkok', feeds:FEEDS, wikiLang:'en', fx:{amt:100, from:'USD', to:'THB'}, autoBackup:true, view:'list', sort:'recent'},
+  cloud:{session:null, dirty:[], lastPull:'1970-01-01T00:00:00Z', lastSync:0, lastBackup:0, error:''}};
+let ui = {tab:'home', para:'all', tag:null, q:'', newsTab:0, anim:true, wikiQ:'', wiki:null, capType:'note', capPara:'inbox', capDue:'', capFiles:[]};
+let cur = null, editMode = false;
 
-/* ---------- storage: IndexedDB (falls back to localStorage) ---------- */
+/* ================= storage ================= */
 const Store = {
   idb:null,
   async init(){ try{ this.idb = await new Promise((res,rej)=>{ const r = indexedDB.open('secondbrain',1); r.onupgradeneeded = () => { r.result.createObjectStore('kv'); r.result.createObjectStore('files'); }; r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }catch(e){ this.idb = null; } },
   tx(st, mode, fn){ return new Promise((res,rej)=>{ const t = this.idb.transaction(st, mode); const r = fn(t.objectStore(st)); t.oncomplete = () => res(r && r.result); t.onerror = () => rej(t.error); t.onabort = () => rej(t.error); }); },
   async get(k){ if(this.idb) return this.tx('kv','readonly',s=>s.get(k)); const v = localStorage.getItem('sb2.'+k); return v ? JSON.parse(v) : undefined; },
   async set(k,v){ if(this.idb) return this.tx('kv','readwrite',s=>s.put(v,k)); localStorage.setItem('sb2.'+k, JSON.stringify(v)); },
-  async putFile(id,b){ if(!this.idb) throw new Error('File storage is not available in this browser'); return this.tx('files','readwrite',s=>s.put(b,id)); },
+  async putFile(id,b){ if(!this.idb) throw new Error('File storage is not available here'); return this.tx('files','readwrite',s=>s.put(b,id)); },
   async getFile(id){ return this.idb ? this.tx('files','readonly',s=>s.get(id)) : null; },
   async delFile(id){ if(this.idb) return this.tx('files','readwrite',s=>s.delete(id)); }
 };
@@ -324,39 +368,90 @@ async function load(){
   await Store.init();
   let d = null; try{ d = await Store.get('db'); }catch(e){}
   if(!d){ try{ const r = localStorage.getItem('secondbrain.v1'); if(r) d = JSON.parse(r); }catch(e){} }
-  if(d){ db.notes = d.notes||[]; db.files = d.files||{}; db.chat = d.chat||[]; db.log = d.log||[]; db.memory = d.memory||''; Object.assign(db.settings, d.settings||{}); }
-  db.chat.forEach(m => { if(m.pending){ m.pending = false; if(!m.text){ m.text = '⚠️ Interrupted'; m.err = true; } } });
+  if(d){
+    db.notes = d.notes || []; db.files = d.files || {}; db.cache = d.cache || {};
+    Object.assign(db.settings, d.settings || {}); Object.assign(db.cloud, d.cloud || {});
+    ['apiKey','model','learn'].forEach(k => delete db.settings[k]);
+  }
+  if(!Array.isArray(db.settings.feeds) || !db.settings.feeds.length) db.settings.feeds = FEEDS;
 }
-document.addEventListener('visibilitychange', () => { if(document.hidden) flush(); });
+document.addEventListener('visibilitychange', () => { if(document.hidden) flush(); else { Cloud.sync(); } });
 
-/* ---------- helpers ---------- */
-const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+/* ================= helpers ================= */
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,8);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const label = (arr,k) => (arr.find(a => a[0]===k) || [k,k])[1];
 const valid = (v,keys,def) => keys.includes(v) ? v : def;
 const byId = id => db.notes.find(n => n.id===id);
-const byTitle = t => db.notes.find(n => n.title.trim().toLowerCase() === t.trim().toLowerCase());
+const byTitle = t => db.notes.find(n => (n.title||'').trim().toLowerCase() === t.trim().toLowerCase());
 const tagsOf = n => [...new Set([...((n.title||'')+' '+(n.body||'')).matchAll(TAGRE)].map(m => m[2].toLowerCase()))];
 const sorted = a => a.slice().sort((x,y) => (y.pinned-x.pinned) || (y.updated-x.updated));
-const today = () => { const d = new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
-const iso = t => new Date(t).toISOString().slice(0,16).replace('T',' ');
-const paraForView = () => PK.includes(state.view) ? state.view : 'inbox';
+const dstr = d => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const today = () => dstr(new Date());
+const addDays = n => { const d = new Date(); d.setDate(d.getDate()+n); return dstr(d); };
+const live = () => db.notes.filter(n => n.para!=='archive');
 function ago(t){ const s=(Date.now()-t)/1000; if(s<60)return 'just now'; if(s<3600)return Math.floor(s/60)+'m ago'; if(s<86400)return Math.floor(s/3600)+'h ago'; if(s<604800)return Math.floor(s/86400)+'d ago'; return new Date(t).toLocaleDateString(); }
-function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2600); }
+function dueLabel(d){ if(!d) return ''; const t = today(); if(d===t) return 'Today'; if(d===addDays(1)) return 'Tomorrow'; if(d===addDays(-1)) return 'Yesterday'; const dt = new Date(d+'T00:00'); return dt.toLocaleDateString(undefined,{day:'numeric',month:'short'}); }
+let toastT;
+function toast(m, action, fn){
+  const t = $('#toast'); t.querySelector('span').textContent = m; const b = t.querySelector('button');
+  b.textContent = action || ''; b.classList.toggle('hide', !action); b.onclick = () => { t.classList.remove('show'); fn && fn(); };
+  t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), action ? 4500 : 2600);
+}
 function allTags(){ const m={}; db.notes.forEach(n => tagsOf(n).forEach(t => m[t]=(m[t]||0)+1)); return Object.entries(m).sort((a,b)=>b[1]-a[1]); }
-function newNote(o={}){ const n = Object.assign({id:uid(),title:'',body:'',type:'note',para:'inbox',pinned:false,done:false,files:[],created:Date.now(),updated:Date.now()}, o); db.notes.unshift(n); save(); return n; }
-function withTags(body, tags){ const have = new Set([...(' '+body).matchAll(TAGRE)].map(m=>m[2].toLowerCase())); const add = (tags||[]).map(t=>String(t).replace(/^#/,'').trim().toLowerCase().replace(/\s+/g,'-')).filter(t=>t && !have.has(t)); return add.length ? (body.trim() ? body.trimEnd()+'\n\n' : '') + add.map(t=>'#'+t).join(' ') : body; }
-function logAction(s){ if(!db.settings.learn) return; db.log.push(iso(Date.now()).slice(5)+' '+s); if(db.log.length>120) db.log = db.log.slice(-120); save(); }
+function markDirty(id){ if(!db.cloud.dirty.includes(id)) db.cloud.dirty.push(id); }
+function changed(n){ n.updated = Date.now(); markDirty(n.id); save(); Cloud.soon(); }
+function newNote(o={}){ const n = Object.assign({id:uid(),title:'',body:'',type:'note',para:'inbox',pinned:false,done:false,due:'',files:[],created:Date.now(),updated:Date.now()}, o); db.notes.unshift(n); markDirty(n.id); save(); Cloud.soon(); return n; }
 function removeNote(n){
-  db.notes = db.notes.filter(x => x!==n);
-  const used = new Set([...db.notes.flatMap(x=>x.files||[]), ...db.chat.flatMap(m=>m.files||[])]);
-  (n.files||[]).forEach(id => { if(!used.has(id)){ delete db.files[id]; Store.delFile(id).catch(()=>{}); } });
-  save();
+  db.notes = db.notes.filter(x => x!==n); markDirty(n.id);
+  const used = new Set(db.notes.flatMap(x=>x.files||[]));
+  (n.files||[]).forEach(id => { if(!used.has(id)){ Store.delFile(id).catch(()=>{}); } });
+  save(); Cloud.soon();
+}
+async function getJSON(url, opt={}, ms=12000){
+  const c = new AbortController(), t = setTimeout(() => c.abort(), ms);
+  try{ const r = await fetch(url, {...opt, signal:c.signal}); const j = await r.json().catch(()=>({})); if(!r.ok) throw new Error(j.error || j.msg || j.message || j.error_description || ('error '+r.status)); return j; }
+  catch(e){ throw new Error(e.name==='AbortError' ? 'Connection timed out' : e.message); }
+  finally{ clearTimeout(t); }
+}
+const webFn = (type, url) => getJSON(`${SB_URL}/functions/v1/web?type=${type}&url=${encodeURIComponent(url)}`, {headers:{Authorization:'Bearer '+SB_KEY}}, 15000);
+function openExternal(url){ const P = NATIVE() && window.Capacitor.Plugins; if(P && P.Browser) P.Browser.open({url}); else window.open(url, '_blank', 'noopener'); }
+const b64 = blob => new Promise((res,rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1]); r.onerror = () => rej(r.error); r.readAsDataURL(blob); });
+const dataURL = blob => new Promise((res,rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = () => rej(r.error); r.readAsDataURL(blob); });
+async function shareFile(name, blob, title){
+  const P = NATIVE() && window.Capacitor.Plugins;
+  if(P && P.Filesystem && P.Share){
+    try{ const r = await P.Filesystem.writeFile({path:name, data:await b64(blob), directory:'CACHE'}); await P.Share.share({title:title||name, url:r.uri, dialogTitle:title||('Save '+name)}); return true; }
+    catch(e){ if(!/cancel/i.test(String(e && e.message))) toast('Could not share: ' + (e && e.message)); return false; }
+  }
+  try{ const f = new File([blob], name, {type:blob.type}); if(navigator.canShare && navigator.canShare({files:[f]})){ await navigator.share({files:[f], title:title||name}); return true; } }catch(e){ if(e.name==='AbortError') return false; }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 2000); return true;
+}
+async function shareText(title, text){
+  const P = NATIVE() && window.Capacitor.Plugins;
+  try{ if(P && P.Share){ await P.Share.share({title, text}); return; } if(navigator.share){ await navigator.share({title, text}); return; } }catch(e){ return; }
+  try{ await navigator.clipboard.writeText(text); toast('Copied to clipboard'); }catch(e){ toast('Sharing is not available here'); }
 }
 
-/* ---------- files ---------- */
+/* ================= theme ================= */
+function isDark(){ const t = db.settings.theme; return t==='dark' || (t==='auto' && matchMedia('(prefers-color-scheme: dark)').matches); }
+function applyTheme(){
+  const r = document.documentElement, dark = isDark(), a = ACCENTS[db.settings.accent] || ACCENTS.mint;
+  r.classList.toggle('dark', dark);
+  r.style.setProperty('--acc', dark ? a[0] : a[1]); r.style.setProperty('--accInk', dark ? a[2] : '#FFFFFF');
+  r.style.setProperty('--acc2', (dark ? a[0] : a[1]) + (dark ? '1F' : '1C'));
+  const m = document.querySelector('meta[name=theme-color]'); if(m) m.content = dark ? '#0A0C10' : '#F2F2EE';
+  Neural.color = null;
+}
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if(db.settings.theme==='auto'){ applyTheme(); render(); } });
+
+/* ================= files ================= */
 const urlCache = new Map();
-async function fileURL(id){ if(urlCache.has(id)) return urlCache.get(id); const b = await Store.getFile(id).catch(()=>null); if(!b) return null; const u = URL.createObjectURL(b); urlCache.set(id,u); return u; }
+async function fileURL(id){
+  if(urlCache.has(id)) return urlCache.get(id);
+  let b = await Store.getFile(id).catch(()=>null);
+  if(!b && db.files[id] && db.files[id].path && Cloud.on()){ try{ b = await Cloud.download(db.files[id].path); if(b) await Store.putFile(id, b); }catch(e){} }
+  if(!b) return null; const u = URL.createObjectURL(b); urlCache.set(id,u); return u;
+}
 function hydrate(root=document){
   root.querySelectorAll('[data-file]:not([src])').forEach(async el => { const u = await fileURL(el.dataset.file); if(u) el.src = u; });
   root.querySelectorAll('[data-filelink]:not([href])').forEach(async el => { const u = await fileURL(el.dataset.filelink); if(u) el.href = u; });
@@ -370,46 +465,25 @@ function filesHTML(ids, rm=false){
     return `<div class="fi doc"><a data-filelink="${id}" download="${esc(f.name)}">📄 ${esc(f.name)}</a>${x}</div>`;
   }).join('') + '</div>';
 }
-async function saveFile(blob, name){ const id = uid(); await Store.putFile(id, blob); db.files[id] = {name, type:blob.type||'application/octet-stream', size:blob.size, created:Date.now()}; save(); return id; }
-function kindOf(f){ const t = f.type||'', n = f.name.toLowerCase();
-  if(t.startsWith('image/')) return 'image'; if(t.startsWith('video/')) return 'video';
-  if(t==='application/pdf' || n.endsWith('.pdf')) return 'pdf';
-  if(t.startsWith('text/') || /\.(md|txt|csv|json|html?|xml)$/.test(n)) return 'text'; return null; }
 function resizeImage(file, max){ return new Promise((res,rej) => { const img = new Image(), u = URL.createObjectURL(file);
   img.onload = () => { let w = img.naturalWidth, h = img.naturalHeight; const s = Math.min(1, max/Math.max(w,h)); w = Math.round(w*s); h = Math.round(h*s);
     const c = document.createElement('canvas'); c.width = w; c.height = h; const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0,0,w,h); x.drawImage(img,0,0,w,h);
     URL.revokeObjectURL(u); c.toBlob(b => b ? res(b) : rej(new Error('encode')), 'image/jpeg', .85); };
   img.onerror = () => { URL.revokeObjectURL(u); rej(new Error('decode')); }; img.src = u; }); }
-async function prepFile(f){
-  const kind = kindOf(f); if(!kind) throw new Error(f.name + ': this file type is not supported');
-  let blob = f, name = f.name;
-  if(kind==='image'){ try{ blob = await resizeImage(f, 1568); name = name.replace(/\.[^.]+$/,'') + '.jpg'; }catch(e){ throw new Error(f.name + ': cannot read this image (try JPG or PNG)'); } }
-  if(kind==='pdf' && f.size > 30e6) throw new Error(f.name + ': PDF too large (max 30 MB)');
-  return {kind, blob, name, size:blob.size};
+async function addFile(f){
+  let blob = f, name = f.name || 'file';
+  if((f.type||'').startsWith('image/')){ try{ blob = await resizeImage(f, 2048); name = name.replace(/\.[^.]+$/,'') + '.jpg'; }catch(e){ throw new Error(name + ': cannot read this image'); } }
+  if(blob.size > 80e6) throw new Error(name + ': too large (max 80 MB)');
+  const id = uid(); await Store.putFile(id, blob);
+  db.files[id] = {name, type:blob.type || 'application/octet-stream', size:blob.size, created:Date.now(), cloud:false};
+  save(); Cloud.soon(); return id;
 }
-function videoFrames(blob, n=8){ return new Promise((res,rej) => {
-  const v = document.createElement('video'); v.muted = true; v.playsInline = true; v.preload = 'auto'; v.src = URL.createObjectURL(blob);
-  v.onerror = () => rej(new Error('Cannot read this video on this phone'));
-  v.onloadedmetadata = async () => {
-    const d = v.duration; if(!isFinite(d) || !d){ rej(new Error('Video length unknown')); return; }
-    const W = Math.min(1024, v.videoWidth||1024), H = Math.round((v.videoHeight||576) * W / (v.videoWidth||1024));
-    const c = document.createElement('canvas'); c.width = W; c.height = H; const ctx = c.getContext('2d'); const out = [];
-    for(let i=0;i<n;i++){
-      const t = d*(i+.5)/n;
-      await new Promise(r => { const to = setTimeout(r, 4000); v.onseeked = () => { clearTimeout(to); r(); }; v.currentTime = t; });
-      ctx.drawImage(v,0,0,W,H); const b = await new Promise(r => c.toBlob(r,'image/jpeg',.8)); if(b) out.push({t:Math.round(t), blob:b});
-    }
-    URL.revokeObjectURL(v.src); res({dur:Math.round(d), frames:out});
-  };
-}); }
-const b64 = blob => new Promise((res,rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1]); r.onerror = () => rej(r.error); r.readAsDataURL(blob); });
-const dataURL = blob => new Promise((res,rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = () => rej(r.error); r.readAsDataURL(blob); });
 
-/* ---------- mini markdown ---------- */
+/* ================= mini markdown ================= */
 function fmt(s){
   return s.replace(/`([^`]+)`/g,'<code>$1</code>')
     .replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>')
-    .replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>')
+    .replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" data-ext="$1">$1</a>')
     .replace(TAGRE,(m,a,b)=>`${a}<a class="tg" data-tag="${b.toLowerCase()}">#${b}</a>`);
 }
 const inline = t => t.split(/(\[\[[^\]]+\]\])/).map((s,i) => i%2 ? `<a class="wl" data-t="${s.slice(2,-2)}">${s.slice(2,-2)}</a>` : fmt(s)).join('');
@@ -417,7 +491,7 @@ function md(src){
   let out='', ul=false, ci=0, m;
   const open=()=>{ if(!ul){ out+='<ul>'; ul=true; } }, close=()=>{ if(ul){ out+='</ul>'; ul=false; } };
   for(const l of esc(src).split('\n')){
-    if((m = l.match(/^\s*[-*] \[( |x)\] (.*)$/i))){ open(); out+=`<li class="ck"><input type="checkbox" data-i="${ci++}" ${m[1]===' '?'':'checked'}><span>${inline(m[2])}</span></li>`; }
+    if((m = l.match(/^\s*[-*] \[( |x)\] (.*)$/i))){ open(); out+=`<li class="ck"><input type="checkbox" class="tick" data-i="${ci++}" ${m[1]===' '?'':'checked'}><span>${inline(m[2])}</span></li>`; }
     else if((m = l.match(/^\s*(?:[-*]|\d+\.) (.*)$/))){ open(); out+=`<li>${inline(m[1])}</li>`; }
     else { close();
       if((m = l.match(/^(#{1,3}) (.*)$/))) out+=`<h${m[1].length+1}>${inline(m[2])}</h${m[1].length+1}>`;
@@ -427,452 +501,316 @@ function md(src){
   }
   close(); return out;
 }
-function toggleCheck(i){ let k=0; cur.body = cur.body.replace(/^(\s*[-*] \[)( |x|X)(\] )/gm,(m,a,b,c)=> k++===i ? a+(b===' '?'x':' ')+c : m); cur.updated = Date.now(); save(); showEditor(); }
 
-/* ---------- views ---------- */
-const TCOL = {task:"var(--acc)", idea:"var(--warm)", link:"#5EA2FF", person:"#C38BFF", journal:"var(--mut)"};
+/* ================= link previews ================= */
+const firstURL = n => (((n.title||'')+' '+(n.body||'')).match(URLRE) || [])[0];
+async function fetchPreview(n){
+  const u = firstURL(n); if(!u || !navigator.onLine) return;
+  if(n.preview && n.preview.url===u) return;
+  try{ const p = await webFn('preview', u); if(p && p.title){ n.preview = {url:u, title:p.title, description:p.description, image:p.image, site:p.site}; if(!n.title || n.title===u) n.title = p.title.slice(0,140); changed(n); if(cur===n) showEditor(); else render(); } }catch(e){}
+}
+const previewHTML = p => p ? `<a class="lp" data-ext="${esc(p.url)}">${p.image?`<img src="${esc(p.image)}" alt="" loading="lazy" onerror="this.remove()">`:''}<div><em>${esc(p.site||'')}</em><b>${esc(p.title)}</b>${p.description?`<small>${esc(p.description)}</small>`:''}</div></a>` : '';
+
+/* ================= cloud sync (Supabase) ================= */
+const Cloud = {
+  busy:false, t:null, state:'idle',
+  on(){ return !!(db.cloud.session && db.cloud.session.access_token); },
+  user(){ return db.cloud.session && db.cloud.session.user; },
+  async auth(path, body){
+    return getJSON(`${SB_URL}/auth/v1/${path}`, {method:'POST', headers:{apikey:SB_KEY, 'content-type':'application/json'}, body:JSON.stringify(body)});
+  },
+  setSession(j){ db.cloud.session = {access_token:j.access_token, refresh_token:j.refresh_token, expires_at:j.expires_at || (Math.floor(Date.now()/1000) + (j.expires_in||3600)), user:{id:j.user.id, email:j.user.email}}; save(); },
+  async signUp(email, pw){ const j = await this.auth('signup', {email, password:pw}); if(j.access_token){ this.setSession(j); return 'in'; } return 'confirm'; },
+  async signIn(email, pw){
+    const prev = db.cloud.lastUser;
+    this.setSession(await this.auth('token?grant_type=password', {email, password:pw}));
+    if(prev && prev !== this.user().id) db.cloud.lastPull = '1970-01-01T00:00:00Z';
+    db.cloud.lastUser = this.user().id;
+    db.notes.forEach(n => markDirty(n.id)); Object.values(db.files).forEach(f => { if(f.owner !== this.user().id) f.cloud = false; });
+    save(); await this.sync(true);
+  },
+  async reset(email){ await this.auth('recover', {email}); },
+  signOut(){ db.cloud.session = null; db.cloud.error = ''; this.state = 'idle'; save(); },
+  async token(){
+    const s = db.cloud.session; if(!s) throw new Error('Not signed in');
+    if(s.expires_at*1000 - Date.now() < 90e3){
+      try{ this.setSession(await this.auth('token?grant_type=refresh_token', {refresh_token:s.refresh_token})); }
+      catch(e){ if(/invalid|expired|not found/i.test(e.message)){ this.signOut(); throw new Error('Session expired — please sign in again'); } throw e; }
+    }
+    return db.cloud.session.access_token;
+  },
+  async rest(path, opt={}){
+    const tk = await this.token();
+    const r = await fetch(`${SB_URL}/rest/v1/${path}`, {...opt, headers:{apikey:SB_KEY, Authorization:'Bearer '+tk, 'content-type':'application/json', ...(opt.headers||{})}});
+    if(!r.ok){ const j = await r.json().catch(()=>({})); throw new Error(j.message || ('sync error '+r.status)); }
+    if(r.status===204) return null;
+    const txt = await r.text(); return txt ? JSON.parse(txt) : null;
+  },
+  async upload(path, blob){
+    const tk = await this.token();
+    const r = await fetch(`${SB_URL}/storage/v1/object/brain/${path}`, {method:'POST', headers:{apikey:SB_KEY, Authorization:'Bearer '+tk, 'content-type':blob.type||'application/octet-stream', 'x-upsert':'true'}, body:blob});
+    if(!r.ok){ const j = await r.json().catch(()=>({})); throw new Error(j.message || j.error || ('upload error '+r.status)); }
+  },
+  async download(path){
+    const tk = await this.token();
+    const r = await fetch(`${SB_URL}/storage/v1/object/authenticated/brain/${path}`, {headers:{apikey:SB_KEY, Authorization:'Bearer '+tk}});
+    return r.ok ? r.blob() : null;
+  },
+  soon(){ if(!this.on()) return; clearTimeout(this.t); this.t = setTimeout(() => this.sync(), 2500); },
+  async sync(force){
+    if(!this.on() || this.busy) return;
+    if(!navigator.onLine){ this.state = 'offline'; paintSync(); return; }
+    this.busy = true; this.state = 'busy'; paintSync();
+    try{
+      const me = this.user().id;
+      // 1) pull changes from other devices
+      let pulled = 0;
+      for(let page=0; page<20; page++){
+        const rows = await this.rest(`notes?select=id,data,updated,deleted,synced_at&synced_at=gt.${encodeURIComponent(db.cloud.lastPull)}&order=synced_at.asc&limit=500`);
+        if(!rows || !rows.length) break;
+        for(const r of rows){
+          const local = byId(r.id), pending = db.cloud.dirty.includes(r.id);
+          db.cloud.lastPull = r.synced_at;
+          if(pending && (!local || (local.updated||0) >= r.updated)) continue; // our own newer change (or deletion) wins
+          if(r.deleted){ if(local && (local.updated||0) <= r.updated){ db.notes = db.notes.filter(x => x!==local); db.cloud.dirty = db.cloud.dirty.filter(x => x!==r.id); pulled++; } }
+          else if(!local || r.updated > (local.updated||0)){
+            const n = Object.assign({files:[]}, r.data, {id:r.id});
+            if(local) Object.assign(local, n); else db.notes.push(n);
+            db.cloud.dirty = db.cloud.dirty.filter(x => x!==r.id); pulled++;
+          }
+        }
+        if(rows.length < 500) break;
+      }
+      const frows = await this.rest(`files?select=id,name,type,size,path&order=created.asc&limit=5000`) || [];
+      for(const f of frows){ if(!db.files[f.id]) db.files[f.id] = {name:f.name, type:f.type, size:f.size, path:f.path, cloud:true, owner:me, created:Date.now()}; else Object.assign(db.files[f.id], {path:f.path, cloud:true, owner:me}); }
+      // 2) upload new files
+      for(const [id, f] of Object.entries(db.files)){
+        if(f.cloud && f.owner===me) continue;
+        if(!db.notes.some(n => (n.files||[]).includes(id))) continue;
+        const b = await Store.getFile(id).catch(()=>null); if(!b || b.size > 50e6) continue;
+        const path = `${me}/files/${id}`;
+        await this.upload(path, b);
+        await this.rest('files?on_conflict=id', {method:'POST', headers:{Prefer:'resolution=merge-duplicates,return=minimal'}, body:JSON.stringify([{id, name:f.name, type:f.type, size:f.size, path}])});
+        Object.assign(f, {path, cloud:true, owner:me});
+      }
+      // 3) push local changes
+      const ids = db.cloud.dirty.slice();
+      for(let i=0; i<ids.length; i+=200){
+        const rows = ids.slice(i,i+200).map(id => { const n = byId(id); return n ? {id, data:n, updated:n.updated||Date.now(), deleted:false} : {id, data:{}, updated:Date.now(), deleted:true}; });
+        await this.rest('notes?on_conflict=id', {method:'POST', headers:{Prefer:'resolution=merge-duplicates,return=minimal'}, body:JSON.stringify(rows)});
+      }
+      db.cloud.dirty = db.cloud.dirty.filter(id => !ids.includes(id));
+      db.cloud.lastSync = Date.now(); db.cloud.error = ''; this.state = 'ok';
+      save();
+      if(pulled) render();
+      this.autoBackup();
+    }catch(e){ db.cloud.error = e.message; this.state = 'err'; save(); if(force) toast('Sync problem: ' + e.message); }
+    finally{ this.busy = false; paintSync(); }
+  },
+  async autoBackup(force){
+    if(!this.on() || (!force && (!db.settings.autoBackup || Date.now() - (db.cloud.lastBackup||0) < 23*3600e3))) return;
+    try{
+      const me = this.user().id, blob = new Blob([JSON.stringify(backupData(false))], {type:'application/json'});
+      await this.upload(`${me}/backups/backup-${today()}.json`, blob);
+      db.cloud.lastBackup = Date.now(); save();
+      const tk = await this.token();
+      const list = await getJSON(`${SB_URL}/storage/v1/object/list/brain`, {method:'POST', headers:{apikey:SB_KEY, Authorization:'Bearer '+tk, 'content-type':'application/json'}, body:JSON.stringify({prefix:`${me}/backups/`, limit:100, sortBy:{column:'name', order:'desc'}})});
+      const old = (list||[]).map(o => `${me}/backups/${o.name}`).slice(14);
+      if(old.length) await fetch(`${SB_URL}/storage/v1/object/brain`, {method:'DELETE', headers:{apikey:SB_KEY, Authorization:'Bearer '+tk, 'content-type':'application/json'}, body:JSON.stringify({prefixes:old})});
+      if(force) toast('☁️ Backup saved to your cloud');
+    }catch(e){ if(force) toast('Cloud backup failed: ' + e.message); }
+  }
+};
+function syncDotClass(){ if(!Cloud.on()) return ''; return {busy:'busy', ok:'ok', err:'err'}[Cloud.state] || (db.cloud.dirty.length ? 'busy' : 'ok'); }
+function paintSync(){ document.querySelectorAll('.sdot').forEach(d => d.className = 'sdot ' + syncDotClass()); const el = $('#syncLine'); if(el) el.innerHTML = syncLine(); }
+function syncLine(){
+  if(!Cloud.on()) return 'Not signed in — notes are saved on this device only.';
+  if(Cloud.state==='busy') return 'Syncing…';
+  if(Cloud.state==='offline' || !navigator.onLine) return 'Offline — changes will sync when you are back online.';
+  if(db.cloud.error) return '⚠️ ' + esc(db.cloud.error);
+  return `✓ Synced ${db.cloud.lastSync ? ago(db.cloud.lastSync) : ''}${db.cloud.dirty.length ? ` · ${db.cloud.dirty.length} waiting` : ''}`;
+}
+addEventListener('online', () => { Cloud.sync(); render(); });
+addEventListener('offline', () => { Cloud.state = 'offline'; paintSync(); });
+setInterval(() => { if(!document.hidden) Cloud.sync(); }, 60000);
+
+/* ================= online widgets ================= */
+const WX = c => c===0?['☀️','Clear']:c<=2?['🌤️','Partly cloudy']:c===3?['☁️','Cloudy']:c<=48?['🌫️','Fog']:c<=57?['🌦️','Drizzle']:c<=67?['🌧️','Rain']:c<=77?['🌨️','Snow']:c<=82?['🌧️','Showers']:c<=86?['🌨️','Snow showers']:['⛈️','Thunderstorm'];
+async function loadWeather(force){
+  const c = db.cache.weather;
+  if(!force && c && c.city===db.settings.city && Date.now()-c.at < 30*60e3) return c;
+  if(!navigator.onLine) return c;
+  try{
+    let geo = c && c.city===db.settings.city ? c.geo : null;
+    if(!geo){ const g = await getJSON(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(db.settings.city)}&count=1`); if(!g.results||!g.results.length) throw new Error('City not found'); const r = g.results[0]; geo = {lat:r.latitude, lon:r.longitude, name:r.name, country:r.country}; }
+    const w = await getJSON(`https://api.open-meteo.com/v1/forecast?latitude=${geo.lat}&longitude=${geo.lon}&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto&forecast_days=7`);
+    db.cache.weather = {city:db.settings.city, geo, at:Date.now(), data:w}; save(); return db.cache.weather;
+  }catch(e){ if(force) toast('Weather: ' + e.message); return c; }
+}
+async function loadFX(force){
+  const c = db.cache.fx;
+  if(!force && c && Date.now()-c.at < 6*3600e3) return c;
+  if(!navigator.onLine) return c;
+  try{ const j = await getJSON('https://open.er-api.com/v6/latest/USD'); if(!j.rates) throw new Error('no rates'); db.cache.fx = {at:Date.now(), rates:j.rates}; save(); return db.cache.fx; }
+  catch(e){ if(force) toast('Currency: ' + e.message); return c; }
+}
+async function loadNews(feed, force){
+  db.cache.news = db.cache.news || {};
+  const c = db.cache.news[feed.url];
+  if(!force && c && Date.now()-c.at < 20*60e3) return c;
+  if(!navigator.onLine) return c;
+  try{ const j = await webFn('rss', feed.url); db.cache.news[feed.url] = {at:Date.now(), items:(j.items||[]).slice(0,20)}; save(); return db.cache.news[feed.url]; }
+  catch(e){ if(force) toast('News: ' + e.message); return c; }
+}
+async function wikiSearch(q){
+  const lang = db.settings.wikiLang || 'en';
+  const j = await getJSON(`https://${lang}.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&format=json&origin=*&srlimit=8`);
+  return (j.query && j.query.search || []).map(r => ({title:r.title, snippet:r.snippet.replace(/<[^>]+>/g,'').replace(/&quot;/g,'"').replace(/&amp;/g,'&'), url:`https://${lang}.wikipedia.org/wiki/${encodeURIComponent(r.title.replace(/ /g,'_'))}`}));
+}
+function saveLink(url, title, desc){
+  if(db.notes.some(n => n.type==='link' && firstURL(n)===url)){ toast('Already saved'); return; }
+  const n = newNote({title:title||url, body:url + (desc ? '\n\n' + desc : ''), type:'link', para:'resources'});
+  toast('🔖 Saved to Resources', 'Open', () => openNote(n.id)); fetchPreview(n);
+}
+
+/* ================= rendering ================= */
+const greet = () => { const h = new Date().getHours(); return h<5 ? 'Late night' : h<12 ? 'Good morning' : h<17 ? 'Good afternoon' : h<22 ? 'Good evening' : 'Good night'; };
+const initial = () => { const u = Cloud.user(); return u ? u.email[0].toUpperCase() : '☺'; };
+function thumbOf(n){
+  const img = (n.files||[]).find(id => db.files[id] && db.files[id].type.startsWith('image/'));
+  if(img) return `<img class="thumb" data-file="${img}" alt="">`;
+  if(n.preview && n.preview.image) return `<img class="thumb" src="${esc(n.preview.image)}" alt="" loading="lazy" onerror="this.remove()">`;
+  return '';
+}
 function card(n, i=0){
-  const snip = (n.body||'').replace(/[#*`>\[\]]/g,' ').replace(/\s+/g,' ').trim().slice(0,160);
-  const tags = tagsOf(n).slice(0,4).map(t=>'#'+esc(t)).join(' ');
-  const nf = (n.files||[]).length;
-  return `<div class="card tilt ${n.done?'done':''}" data-id="${n.id}" style="--i:${Math.min(i,12)};--t:${TCOL[n.type]||'transparent'}">
-    ${n.type==='task' ? `<input type="checkbox" class="tick" data-tick="${n.id}" ${n.done?'checked':''}>` : ''}
-    <div class="b"><h3>${n.pinned?'📌 ':''}${esc(n.title||'Untitled')}</h3>${snip?`<p>${esc(snip)}</p>`:''}
-    <div class="meta"><span class="badge">${label(TYPES,n.type)}</span><span>${label(PARA,n.para)}</span>${nf?`<span>📎 ${nf}</span>`:''}${tags?`<span>${tags}</span>`:''}<span>${ago(n.updated)}</span></div></div></div>`;
+  const t = TYPE[n.type] || TYPE.note, tags = tagsOf(n).slice(0,3), nf = (n.files||[]).length;
+  const snip = (n.preview && n.preview.description) || (n.body||'').replace(URLRE,' ').replace(/[#*`>\[\]]/g,' ').replace(/\s+/g,' ').trim();
+  const late = n.due && !n.done && n.due < today();
+  return `<div class="sw" style="--i:${Math.min(i,14)}"><div class="sw-bg"><span class="l">${n.pinned?'Unpin':'📌 Pin'}</span><span class="r">${n.para==='archive'?'Restore':'🗄️ Archive'}</span></div>
+  <div class="card ${n.done?'done':''}" data-id="${n.id}">
+    ${n.type==='task' ? `<input type="checkbox" class="tick" data-tick="${n.id}" ${n.done?'checked':''} aria-label="Done">` : ''}
+    <div class="b"><div class="kick"><span class="dot" style="--c:${t.c}"></span>${t.l}${n.para!=='inbox'||n.type!=='task'?' · '+PAR[n.para].l:''}${n.prio?'<span class="prio">!</span>':''}${n.due?`<span class="due ${late?'late':''}">${dueLabel(n.due)}</span>`:''}</div>
+    <h3>${n.pinned?'📌 ':''}${esc(n.title||'Untitled')}</h3>${snip?`<p>${esc(snip.slice(0,180))}</p>`:''}
+    <div class="meta">${tags.map(x=>'#'+esc(x)).join(' ')}${nf?`<span>📎 ${nf}</span>`:''}<span>${ago(n.updated)}</span></div></div>
+    ${thumbOf(n)}
+  </div></div>`;
 }
-const list = (a, empty='Nothing here yet') => a.length ? '<div class="list">' + a.map((n,i)=>card(n,i)).join('') + '</div>' : `<div class="empty">${empty}</div>`;
-function bubble(m){
-  if(m.role==='user') return `<div class="msg u">${esc(m.text||'')}${filesHTML(m.files)}</div>`;
-  const acts = m.acts && m.acts.length ? `<div class="acts">${m.acts.map(a=>`<div>${inline(esc(a))}</div>`).join('')}</div>` : '';
-  const body = m.pending && !m.text ? `<div class="think"><span class="orb"></span><span>${esc(m.status||'Thinking')}…</span></div>` : md(m.text||'');
-  return `<div class="msg a ${m.err?'err':''}">${body}${acts}${filesHTML(m.files)}</div>`;
-}
+const list = (a, empty='Nothing here yet', icon='🌱') => a.length ? `<div class="${db.settings.view==='grid'&&ui.tab==='library'?'grid':''} anim">${a.map((n,i)=>card(n,i)).join('')}</div>` : `<div class="empty"><b>${icon}</b>${empty}</div>`;
+function mini(n){ const t = TYPE[n.type]||TYPE.note; return `<div class="mini" data-id="${n.id}"><div class="kick"><span class="dot" style="--c:${t.c}"></span>${t.l}</div><h4>${esc(n.title||'Untitled')}</h4><p>${esc((n.body||'').replace(/\s+/g,' ').slice(0,90))}</p></div>`; }
+const topbar = (title, sub='', right='') => `<div class="topbar"><h1>${title}</h1>${right}</div>${sub?`<div class="sub">${sub}</div>`:''}`;
+const meBtn = () => `<button class="avatar" data-act="openMe" aria-label="Account">${esc(initial())}<span class="sdot ${syncDotClass()}"></span></button>`;
 
 function render(){
-  $('#appName').textContent = db.settings.name; document.title = db.settings.name;
-  document.body.dataset.screen = state.view;
-  const ai = state.view==='ai';
-  $('#capIn').placeholder = ai ? (busy ? 'Claude is working…' : 'Ask, save, or attach a photo/video/PDF/link…') : 'Capture a thought…';
-  $('#capBtn').textContent = ai ? '➤' : '＋';
-  $('#nav').innerHTML = VIEWS.map(([k,l]) => `<button class="chip ${state.view===k&&!state.q?'on':''}" data-view="${k}">${l}</button>`).join('');
-  const N = db.notes, v = state.view; let h = '';
-  if(state.q){
-    const words = state.q.toLowerCase().split(/\s+/);
-    h = `<div class="sec">Results for “${esc(state.q)}”</div>` + list(sorted(N.filter(n => { const s=(n.title+' '+n.body).toLowerCase(); return words.every(w=>s.includes(w)); })), 'No matches');
-  } else if(v==='home'){
-    const live = N.filter(n => n.para!=='archive'), open = live.filter(n => n.type==='task' && !n.done);
-    const inboxN = N.filter(n=>n.para==='inbox'&&n.type!=='journal').length;
-    h += updateBanner();
-    if(N.length > 1 && Date.now()-(db.settings.lastExport||0) > 7*864e5)
-      h += `<div class="banner">💾 <span style="flex:1">No backup in the last 7 days.</span><button class="btn" data-act="export">Back up</button></div>`;
-    h = `<div class="hero tilt"><canvas id="neural" aria-label="Your notes as a 3D network — drag to rotate"></canvas><div class="hero-t"><div class="kicker">${N.length} memories</div><div class="hello">${greet()}</div><div class="date">${new Date().toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'})}</div></div></div>` + h;
-    h += `<div class="stats">${[[live.length,'Notes'],[inboxN,'Inbox'],[open.length,'Open tasks'],[allTags().length,'Tags']].map(([v,l],i)=>`<div class="stat tilt" style="--i:${i+1}"><b data-count="${v}">${v}</b><span>${l}</span></div>`).join('')}</div>`;
-    h += `<div class="row" style="margin-top:12px"><button class="btn" data-act="today">📔 Today's journal</button><button class="btn g" data-act="new">＋ New note</button>${inboxN?`<button class="btn g" data-ask="✨ Organize my inbox">✨ Organize inbox</button>`:''}</div>`;
-    const pins = live.filter(n => n.pinned);
-    if(pins.length) h += `<div class="sec">Pinned</div>` + list(sorted(pins));
-    if(open.length) h += `<div class="sec">Open tasks</div>` + list(sorted(open).slice(0,8));
-    h += `<div class="sec">Recent</div>` + list(live.filter(n=>!n.pinned).sort((a,b)=>b.updated-a.updated).slice(0,20), 'Empty for now — capture your first thought below 👇');
-  } else if(v==='ai'){
-    if(!db.settings.apiKey) h += `<div class="box ai-intro"><div class="orb lg"><i></i></div><h3>Connect Claude</h3><ol style="text-align:left;display:inline-block"><li>Open console.anthropic.com and sign in</li><li>Add a little credit under Billing</li><li>Create a key under Settings → API Keys</li><li>Paste it here in ⚙️ Settings</li></ol><button class="btn" data-act="settings">Add API key</button></div>`;
-    else if(!db.chat.length) h += `<div class="box ai-intro"><div class="orb lg"><i></i></div><h3>Your brain is connected</h3><p class="mut">Ask anything about your notes, tell Claude what to save, or tap 📎 to add a photo, video, PDF or document. Paste a link and Claude reads the page. Claude creates, edits, organizes and deletes notes for you, and learns how you like things.</p></div>`;
-    h += `<div class="chat">${db.chat.map(bubble).join('')}</div>`;
-    if(!busy && db.settings.apiKey) h += `<div class="row" style="margin-top:14px">${ASKS.map(a=>`<button class="chip" data-ask="${esc(a)}">${esc(a)}</button>`).join('')}</div>`;
-  } else if(HINT[v]){
-    h = `<div class="sec">${HINT[v]}</div>` + list(sorted(N.filter(n => n.para===v && (v==='archive' || n.type!=='journal'))));
-  } else if(v==='tasks'){
-    const t = N.filter(n => n.type==='task' && n.para!=='archive');
-    h = `<div class="sec">Open</div>` + list(sorted(t.filter(n=>!n.done)), 'All clear 🎉') + `<div class="sec">Done</div>` + list(sorted(t.filter(n=>n.done)).slice(0,30), '—');
-  } else if(v==='journal'){
-    h = `<div class="row"><button class="btn" data-act="today">📔 Open today (${today()})</button></div><div class="sec">Entries</div>` +
-        list(N.filter(n=>n.type==='journal').sort((a,b)=>(b.date||'').localeCompare(a.date||'')), 'No entries yet');
-  } else if(v==='tags'){
-    const t = allTags();
-    h = `<div class="row">` + (t.length ? t.map(([k,c]) => `<button class="chip ${state.tag===k?'on':''}" data-tag="${esc(k)}">#${esc(k)}<small>${c}</small></button>`).join('') : '<div class="empty">Write #tags inside any note and they appear here</div>') + `</div>`;
-    if(state.tag) h += `<div class="sec">#${esc(state.tag)}</div>` + list(sorted(N.filter(n => tagsOf(n).includes(state.tag))));
+  document.querySelectorAll('.tab').forEach(b => b.classList.toggle('on', b.dataset.tab===ui.tab));
+  const v = $('#view'); let h = '';
+  if(ui.tab==='home') h = renderHome();
+  else if(ui.tab==='library') h = renderLibrary();
+  else if(ui.tab==='tasks') h = renderTasks();
+  else if(ui.tab==='discover') h = renderDiscover();
+  v.innerHTML = h; hydrate(v);
+  if(!ui.anim) v.querySelectorAll('.anim').forEach(e => e.classList.remove('anim'));
+  ui.anim = false;
+  if(ui.tab==='home'){ Neural.mount($('#neural')); }
+}
+function renderHome(){
+  const L = live(), t = today();
+  const dueToday = L.filter(n => n.type==='task' && !n.done && n.due && n.due <= t);
+  const open = L.filter(n => n.type==='task' && !n.done);
+  const todo = [...dueToday, ...open.filter(n => !n.due).slice(0, Math.max(0, 5-dueToday.length))];
+  const w = db.cache.weather, cw = w && w.data && w.data.current;
+  let h = `<div class="topbar"><div style="flex:1"><div class="sub" style="margin:0">${new Date().toLocaleDateString(undefined,{weekday:'long', day:'numeric', month:'long'})}</div><h1>${greet()}</h1></div>${meBtn()}</div>`;
+  h += `<div class="hero"><canvas id="neural" aria-hidden="true"></canvas><div class="hero-t"><span class="kicker">${db.notes.length} memories</span>
+    ${cw ? `<div class="wx"><span class="ic">${WX(cw.weather_code)[0]}</span><div><b>${Math.round(cw.temperature_2m)}°</b><small>${esc(w.geo.name)} · ${WX(cw.weather_code)[1]}</small></div></div>` : `<div class="wx"><span class="ic">🧠</span><div><b style="font-size:20px">${esc(db.settings.name)}</b><small>${navigator.onLine?'Loading weather…':'Offline mode'}</small></div></div>`}
+  </div></div>`;
+  h += updateBanner();
+  if(!Cloud.on() && db.notes.length > 3) h += `<div class="banner">☁️ <span>Sign in to back up and sync your notes</span><button class="btn sm" data-act="openMe">Sign in</button></div>`;
+  h += `<div class="stats">${[[L.length,'Notes','library'],[db.notes.filter(n=>n.para==='inbox'&&n.type!=='journal').length,'Inbox','inbox'],[dueToday.length,'Due today','tasks'],[open.length,'Open tasks','tasks']].map(([v,l,go])=>`<div class="stat" data-go="${go}"><b>${v}</b><span>${l}</span></div>`).join('')}</div>`;
+  h += `<div class="qa"><button data-act="today"><i>📔</i>Journal</button><button data-act="newTask"><i>✅</i>Task</button><button data-act="scan"><i>📷</i>Photo</button><button data-act="newLink"><i>🔗</i>Link</button></div>`;
+  h += `<div class="sec"><h2>Today</h2><a data-go="tasks">All tasks</a></div>` + (todo.length ? list(todo) : `<div class="panel mut" style="text-align:center">✨ Nothing due. Tap ＋ to add a task.</div>`);
+  const pins = L.filter(n => n.pinned);
+  if(pins.length) h += `<div class="sec"><h2>Pinned</h2></div><div class="hscroll">${sorted(pins).map(mini).join('')}</div>`;
+  h += `<div class="sec"><h2>Recent</h2><a data-go="library">See all</a></div>` + list(L.filter(n=>!n.pinned && !todo.includes(n)).sort((a,b)=>b.updated-a.updated).slice(0,12), 'Your brain is empty. Tap ＋ to capture your first thought.', '🧠');
+  return h;
+}
+function renderLibrary(){
+  let N = db.notes;
+  const words = ui.q.toLowerCase().split(/\s+/).filter(Boolean);
+  if(words.length) N = N.filter(n => { const s = (n.title+' '+n.body+' '+(n.preview?n.preview.title:'')).toLowerCase(); return words.every(w=>s.includes(w)); });
+  if(ui.para==='journal') N = N.filter(n => n.type==='journal');
+  else if(ui.para==='all') N = N.filter(n => n.para!=='archive');
+  else N = N.filter(n => n.para===ui.para && (ui.para==='archive' || n.type!=='journal'));
+  if(ui.tag) N = N.filter(n => tagsOf(n).includes(ui.tag));
+  N = db.settings.sort==='az' ? N.slice().sort((a,b)=>(a.title||'').localeCompare(b.title||'')) : sorted(N);
+  const counts = k => k==='all' ? db.notes.filter(n=>n.para!=='archive').length : k==='journal' ? db.notes.filter(n=>n.type==='journal').length : db.notes.filter(n=>n.para===k && (k==='archive'||n.type!=='journal')).length;
+  let h = topbar('Notes', '', meBtn());
+  h += `<div class="search"><input id="libQ" type="search" placeholder="Search notes, tags, links…" value="${esc(ui.q)}" autocomplete="off"></div>`;
+  h += `<div class="chips">${[['all','All'],...PARA.slice(0,4).map(p=>[p[0],p[2]+' '+p[1]]),['journal','📔 Journal'],['archive','🗄️ Archive']].map(([k,l])=>`<button class="chip ${ui.para===k?'on':''}" data-para="${k}">${l}<small>${counts(k)}</small></button>`).join('')}</div>`;
+  const tags = allTags();
+  if(tags.length) h += `<div class="chips">${tags.slice(0,30).map(([k,c])=>`<button class="chip ${ui.tag===k?'on':''}" data-tag="${esc(k)}">#${esc(k)}<small>${c}</small></button>`).join('')}</div>`;
+  h += `<div class="toolrow"><span class="small grow">${N.length} ${N.length===1?'note':'notes'}${ui.tag?` · #${esc(ui.tag)}`:''}</span>
+    <div class="seg"><button class="${db.settings.sort!=='az'?'on':''}" data-sort="recent">Recent</button><button class="${db.settings.sort==='az'?'on':''}" data-sort="az">A–Z</button></div>
+    <div class="seg"><button class="${db.settings.view!=='grid'?'on':''}" data-viewmode="list" aria-label="List">☰</button><button class="${db.settings.view==='grid'?'on':''}" data-viewmode="grid" aria-label="Grid">▦</button></div></div>`;
+  h += list(N, words.length ? 'No matches' : 'Nothing here yet', words.length ? '🔍' : '🌱');
+  if(N.length) h += `<p class="small" style="text-align:center;margin-top:14px">Tip: swipe a note right to pin, left to archive. Long-press for more.</p>`;
+  return h;
+}
+function renderTasks(){
+  const T = db.notes.filter(n => n.type==='task' && n.para!=='archive'), t = today(), wk = addDays(7);
+  const open = T.filter(n => !n.done), by = (a,b) => (a.due||'9').localeCompare(b.due||'9') || (b.prio?1:0)-(a.prio?1:0) || b.updated-a.updated;
+  const groups = [
+    ['Overdue', open.filter(n => n.due && n.due < t)],
+    ['Today', open.filter(n => n.due === t)],
+    ['Next 7 days', open.filter(n => n.due > t && n.due <= wk)],
+    ['Later', open.filter(n => n.due > wk)],
+    ['No date', open.filter(n => !n.due)]
+  ];
+  let h = topbar('Tasks', `${open.length} open · ${T.filter(n=>n.done).length} done`, meBtn());
+  h += `<div class="row"><button class="btn wide" data-act="newTask">＋ New task</button></div>`;
+  let any = false;
+  for(const [name, arr] of groups){ if(!arr.length) continue; any = true; h += `<div class="sec"><h2>${name}</h2><span class="small">${arr.length}</span></div>` + list(arr.sort(by)); }
+  if(!any) h += `<div class="empty"><b>🎉</b>All clear. Enjoy your day!</div>`;
+  const done = T.filter(n => n.done).sort((a,b)=>b.updated-a.updated);
+  if(done.length) h += `<div class="sec"><h2>Done</h2><a data-act="clearDone">Archive all</a></div>` + list(done.slice(0,20));
+  return h;
+}
+function renderDiscover(){
+  let h = topbar('Discover', navigator.onLine ? 'Live information from the internet' : '⚠️ Offline — showing saved information', meBtn());
+  h += `<form class="search" id="wikiForm"><input id="wikiQ" type="search" placeholder="Search Wikipedia…" value="${esc(ui.wikiQ)}" autocomplete="off" enterkeyhint="search"></form>`;
+  if(ui.wiki){
+    h += `<div class="panel res">${ui.wiki.length ? ui.wiki.map(r => `<a data-ext="${esc(r.url)}"><b>${esc(r.title)}</b><small>${esc(r.snippet)}</small></a>`).join('') : '<p class="mut">No results</p>'}
+      <div class="row"><button class="btn sm g" data-google="${esc(ui.wikiQ)}">Search Google ↗</button><select id="wikiLang" style="width:auto;padding:7px 10px">${['en','th','fr','ar'].map(l=>`<option ${db.settings.wikiLang===l?'selected':''}>${l}</option>`).join('')}</select><span style="flex:1"></span><button class="link" data-act="wikiClear">Clear</button></div></div>`;
   }
-  const vw = $('#view'); vw.classList.toggle('anim', state.anim!==false); state.anim = false;
-  vw.innerHTML = h; hydrate(vw);
-  if(v==='home' && !state.q){ Neural.mount($('#neural')); countUp(); }
-  if(v==='ai' && !state.q) requestAnimationFrame(() => scrollTo(0, document.body.scrollHeight));
+  const w = db.cache.weather;
+  h += `<div class="sec"><h2>Weather</h2><a data-act="setCity">${esc(db.settings.city)} ✎</a></div>`;
+  if(w && w.data && w.data.current){
+    const c = w.data.current, d = w.data.daily;
+    h += `<div class="panel"><div class="wxbig"><span class="ic">${WX(c.weather_code)[0]}</span><div><b>${Math.round(c.temperature_2m)}°C</b><div class="mut">${WX(c.weather_code)[1]} · feels ${Math.round(c.apparent_temperature)}° · 💧${c.relative_humidity_2m}% · 💨${Math.round(c.wind_speed_10m)} km/h</div></div></div>
+      <div class="days">${d.time.map((t,i)=>`<div><span>${i?new Date(t+'T00:00').toLocaleDateString(undefined,{weekday:'short'}):'Today'}</span><i>${WX(d.weather_code[i])[0]}</i><b>${Math.round(d.temperature_2m_max[i])}°</b><span>${Math.round(d.temperature_2m_min[i])}°</span><span style="color:#5EA2FF">${d.precipitation_probability_max[i]??0}%</span></div>`).join('')}</div>
+      <p class="small" style="margin:10px 0 0">${esc(w.geo.name)}, ${esc(w.geo.country||'')} · updated ${ago(w.at)}</p></div>`;
+  } else h += `<div class="panel mut">${navigator.onLine ? 'Loading weather…' : 'Weather needs internet.'}</div>`;
+  const fx = db.cache.fx, F = db.settings.fx;
+  h += `<div class="sec"><h2>Currency</h2>${fx?`<span class="small">updated ${ago(fx.at)}</span>`:''}</div><div class="panel">`;
+  if(fx){
+    const conv = (a, f, t) => a / fx.rates[f] * fx.rates[t];
+    const out = conv(+F.amt||0, F.from, F.to), opts = s => CURR.map(c=>`<option ${c===s?'selected':''}>${c}</option>`).join('');
+    h += `<input id="fxAmt" type="number" inputmode="decimal" value="${esc(F.amt)}"><div class="fx-grid" style="margin-top:8px"><select id="fxFrom">${opts(F.from)}</select><button class="ib" data-act="fxSwap" aria-label="Swap">⇄</button><select id="fxTo">${opts(F.to)}</select></div>
+      <div class="fx-out" id="fxOut">${out.toLocaleString(undefined,{maximumFractionDigits:2})} ${F.to}</div>
+      <p class="small" style="margin:4px 0 0">1 USD = ${conv(1,'USD','THB').toFixed(2)} THB · 1 EUR = ${conv(1,'EUR','THB').toFixed(2)} THB · 1 TND = ${conv(1,'TND','THB').toFixed(2)} THB</p>`;
+  } else h += `<p class="mut" style="margin:0">${navigator.onLine?'Loading rates…':'Rates need internet.'}</p>`;
+  h += `</div>`;
+  const feeds = db.settings.feeds, feed = feeds[Math.min(ui.newsTab, feeds.length-1)], nc = db.cache.news && db.cache.news[feed.url];
+  h += `<div class="sec"><h2>News</h2><a data-act="refreshNews">Refresh</a></div><div class="chips">${feeds.map((f,i)=>`<button class="chip ${i===ui.newsTab?'on':''}" data-news="${i}">${esc(f.name)}</button>`).join('')}</div>`;
+  h += `<div class="panel news">${nc && nc.items.length ? nc.items.map((it,i)=>`<a data-ext="${esc(it.link)}"><div><b>${esc(it.title)}</b><small>${esc(it.source || feed.name)}${it.date?' · '+ago(Date.parse(it.date)||Date.now()):''}</small></div><button data-savenews="${i}" aria-label="Save">🔖</button></a>`).join('') : `<p class="mut" style="margin:0">${navigator.onLine?'Loading headlines…':'News needs internet.'}</p>`}</div>`;
+  return h;
 }
-function renderPending(){
-  const ic = {image:'🖼️',video:'🎬',pdf:'📄',text:'📃'};
-  $('#pend').innerHTML = pending.map((p,i) => `<span class="pc">${ic[p.kind]} ${esc(p.name.length>22?p.name.slice(0,20)+'…':p.name)}<button data-unpend="${i}" aria-label="Remove">✕</button></span>`).join('');
-}
-
-/* ---------- sheets (phone back button closes them) ---------- */
-function openSheet(id){ const el=$('#'+id); if(!el.classList.contains('open')){ el.classList.add('open'); document.body.classList.add('sheet-open'); try{ history.pushState({sheet:id},''); }catch(e){} } }
-function closeSheet(id){ if(history.state && history.state.sheet===id) history.back(); else onClosed(id); }
-function onClosed(id){ $('#'+id).classList.remove('open'); if(!document.querySelector('.sheet.open')) document.body.classList.remove('sheet-open'); if(id==='editor') finishEditor(); render(); }
-window.addEventListener('popstate', () => ['editor','settings'].forEach(id => { if($('#'+id).classList.contains('open')) onClosed(id); }));
-
-/* ---------- editor ---------- */
-function finishEditor(){
-  if(cur && db.notes.includes(cur)){
-    if(!cur.title.trim() && !cur.body.trim() && !(cur.files||[]).length) removeNote(cur);
-    else if(openSnap){
-      const t = cur.title||'Untitled', newTags = tagsOf(cur).filter(x => !openSnap.tags.includes(x));
-      if(openSnap.isNew) logAction(`wrote ${cur.type} "${t}" in ${cur.para}`);
-      else if(cur.body!==openSnap.body || cur.title!==openSnap.title) logAction(`edited "${t}"`);
-      if(newTags.length) logAction(`tagged "${t}" with #${newTags.join(' #')}`);
-    }
-  }
-  save(); cur = null; openSnap = null;
-}
-function openNote(id){
-  const n = byId(id); if(!n) return;
-  if(cur && cur!==n) finishEditor();
-  cur = n; n.files = n.files || [];
-  openSnap = {title:n.title, body:n.body, tags:tagsOf(n), isNew:!n.title && !n.body};
-  editMode = !n.body.trim() || (n.type==='journal' && n.date===today());
-  showEditor(); openSheet('editor'); $('#editor .sh-body').scrollTop = 0;
-  if(editMode) setTimeout(() => (n.title ? $('#eBody') : $('#eTitle')).focus(), 60);
-}
-function showEditor(){
-  if(!cur) return;
-  $('#eType').value = cur.type; $('#ePara').value = cur.para;
-  $('#eTitle').value = cur.title; $('#eBody').value = cur.body;
-  $('#eEdit').hidden = !editMode; $('#ePrev').hidden = editMode;
-  $('#bTog').textContent = editMode ? '👁️' : '✏️';
-  $('#bPin').style.opacity = cur.pinned ? 1 : .45;
-  $('#bArc').style.opacity = cur.para==='archive' ? 1 : .45;
-  if(!editMode) $('#ePrev').innerHTML = `<h1>${esc(cur.title||'Untitled')}</h1>` + (cur.body.trim() ? md(cur.body) : '<p class="mut">Empty note — tap ✏️ to write.</p>');
-  $('#eFiles').innerHTML = filesHTML(cur.files, true); hydrate($('#eFiles'));
-  const t = cur.title.trim().toLowerCase();
-  const bl = t ? db.notes.filter(n => n!==cur && n.body.toLowerCase().includes('[['+t+']]')) : [];
-  $('#eBack').innerHTML = bl.length ? `<div class="back"><div class="sec">Linked from</div>${bl.map(card).join('')}</div>` : '';
-  $('#eMeta').innerHTML = `<span>Created ${new Date(cur.created).toLocaleString()}</span><span>Edited ${ago(cur.updated)}</span>${cur.by==='ai'?'<span>✨ by Claude</span>':''}`;
-}
-['eTitle','eBody'].forEach(id => $('#'+id).addEventListener('input', e => { cur[id==='eTitle'?'title':'body'] = e.target.value; cur.updated = Date.now(); save(); }));
-$('#eType').addEventListener('change', e => { cur.type = e.target.value; cur.updated = Date.now(); save(); logAction(`set type of "${cur.title||'Untitled'}" to ${cur.type}`); showEditor(); });
-$('#ePara').addEventListener('change', e => { cur.para = e.target.value; cur.updated = Date.now(); save(); logAction(`moved "${cur.title||'Untitled'}" to ${cur.para}`); showEditor(); });
-$('#noteFile').addEventListener('change', async e => {
-  const n = cur; if(!n) return;
-  for(const f of e.target.files){ try{ const p = await prepFile(f); if(p.size > 80e6) throw new Error(f.name+': too large to store (max 80 MB)'); n.files.push(await saveFile(p.blob, p.name)); }catch(err){ toast(err.message); } }
-  n.updated = Date.now(); save(); logAction(`attached a file to "${n.title||'Untitled'}"`); showEditor(); e.target.value = '';
-});
-
-/* ---------- Claude ---------- */
-const TOOLS = [
-  {name:'search_notes', description:'Search the user\'s notes. Every word of query must appear in title or body (case-insensitive). Optional filters: tag, para (folder), type. Empty query = most recent notes.', input_schema:{type:'object', properties:{query:{type:'string'}, tag:{type:'string'}, para:{type:'string', enum:PK}, type:{type:'string', enum:TK}, limit:{type:'integer'}}}},
-  {name:'read_note', description:'Read one note in full: body, tags, attached files, dates.', input_schema:{type:'object', properties:{id:{type:'string'}}, required:['id']}},
-  {name:'create_note', description:'Create a new note. Search first to avoid duplicates; prefer updating an existing note on the same topic.', input_schema:{type:'object', properties:{title:{type:'string'}, body:{type:'string', description:'Markdown body'}, type:{type:'string', enum:TK}, para:{type:'string', enum:PK}, tags:{type:'array', items:{type:'string'}}, pinned:{type:'boolean'}, file_ids:{type:'array', items:{type:'string'}, description:'file_id values of files the user attached, to keep them with this note'}}, required:['title','body']}},
-  {name:'update_note', description:'Change an existing note. Only the fields you pass change. body replaces the whole body; append adds text at the end; tags are added.', input_schema:{type:'object', properties:{id:{type:'string'}, title:{type:'string'}, body:{type:'string'}, append:{type:'string'}, type:{type:'string', enum:TK}, para:{type:'string', enum:PK}, tags:{type:'array', items:{type:'string'}}, pinned:{type:'boolean'}, done:{type:'boolean'}, file_ids:{type:'array', items:{type:'string'}}}, required:['id']}},
-  {name:'delete_note', description:'Permanently delete a note. The user must approve on screen. Only when the user asked to delete; otherwise move it to archive.', input_schema:{type:'object', properties:{id:{type:'string'}}, required:['id']}},
-  {name:'update_memory', description:'Replace your long-term memory about the user: preferences, habits, recurring projects, people, how they like things organized, corrections they made. Rewrite the full text each time as a concise bullet list (under 4000 characters), keeping what is still true.', input_schema:{type:'object', properties:{memory:{type:'string'}}, required:['memory']}},
-  {name:'create_file', description:'Create a downloadable file (.md, .txt, .csv, .json, .html…) and optionally attach it to a note. The user gets a download link in the chat.', input_schema:{type:'object', properties:{filename:{type:'string'}, content:{type:'string'}, note_id:{type:'string'}}, required:['filename','content']}},
-  {name:'list_tags', description:'List all tags with how many notes use them.', input_schema:{type:'object', properties:{}}},
-  {type:'web_fetch_20250910', name:'web_fetch', max_uses:5}
-];
-const STATUS = {search_notes:'Searching your notes', read_note:'Reading a note', create_note:'Saving a note', update_note:'Updating a note', delete_note:'Waiting for your approval', update_memory:'Updating memory', create_file:'Creating a file', list_tags:'Checking tags'};
-
-function sysPrompt(){
-  const idx = sorted(db.notes).slice(0,250).map(n => `${n.id} | ${n.title||'Untitled'} | ${n.type} | ${n.para}${n.done?' | done':''}${tagsOf(n).length?' | #'+tagsOf(n).join(' #'):''}${(n.files||[]).length?' | files:'+n.files.length:''} | ${iso(n.updated).slice(0,10)}`).join('\n');
-  return `You are Claude, the AI core of "${db.settings.name}", the user's personal second-brain app on their phone. Today is ${today()} (${Intl.DateTimeFormat().resolvedOptions().timeZone}).
-You read and change the user's notes only through the tools. Act directly: when the user asks to save, change, organize or remember something, do it with the tools, then reply briefly.
-
-## How to organize
-- Folders (para): inbox = unsorted; projects = goals with an end; areas = ongoing responsibilities; resources = reference and interests; archive = done or inactive.
-- Types: note, task, idea, link, person, journal. One task per actionable item.
-- Tags: lowercase, short, reuse existing tags before inventing new ones.
-- Link related notes with [[Exact Title]]. Avoid duplicates: search first and update the existing note when the topic already exists.
-- Note bodies use simple markdown: # headings, - lists, - [ ] checklists, **bold**, plain URLs.
-- When extracting from images, video frames, PDFs, files or web pages: start with a 1-2 line summary, then capture every useful detail exactly (names, numbers, prices, dates, phone numbers, addresses, steps, quotes). Attach the original file with file_ids. For a web page, keep its URL in the note.
-- Deleting is permanent: only delete when the user clearly asks.
-- Learning: when you notice a lasting preference, habit, project, person, or the user corrects you, call update_memory. Use the recent actions below to learn how the user organizes things and follow the same patterns.
-
-## Replies
-- Reply in the user's language (Thai, English, Arabic, French…), short and clear.
-- Mention the notes you created or changed as [[Title]].
-
-## Your memory about the user
-${db.memory || '(empty so far)'}
-
-## Recent user actions in the app
-${db.settings.learn && db.log.length ? db.log.slice(-40).join('\n') : '(none)'}
-
-## Note index — ${db.notes.length} notes (id | title | type | folder | tags | files | updated)
-${idx || '(no notes yet)'}`;
+async function refreshDiscover(force){
+  if(!navigator.onLine) return;
+  const feed = db.settings.feeds[Math.min(ui.newsTab, db.settings.feeds.length-1)];
+  await Promise.all([loadWeather(force), loadFX(force), loadNews(feed, force)]);
+  if(ui.tab==='discover' && !document.querySelector('#view input:focus')) render();
 }
 
-async function callClaude(body){
-  if(!db.settings.apiKey) throw new Error('Add your Claude API key in ⚙️ Settings first.');
-  if(!navigator.onLine) throw new Error("You're offline. Claude needs internet — your notes are still safe.");
-  let r;
-  try{
-    r = await fetch('https://api.anthropic.com/v1/messages', {method:'POST', headers:{'content-type':'application/json','x-api-key':db.settings.apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'}, body:JSON.stringify(body)});
-  }catch(e){ throw new Error('Could not reach Claude. Check your internet connection.'); }
-  const j = await r.json().catch(()=>({}));
-  if(!r.ok) throw new Error(r.status===401 ? 'Invalid API key — check it in ⚙️ Settings.' : (j.error && j.error.message) || ('Claude error ' + r.status));
-  return j;
-}
-
-async function runTool(name, i, ctx){
-  switch(name){
-    case 'search_notes': {
-      const words = (i.query||'').toLowerCase().split(/\s+/).filter(Boolean), tag = (i.tag||'').toLowerCase().replace(/^#/,'');
-      const r = db.notes.filter(n => { const s = (n.title+' '+n.body).toLowerCase(); return words.every(w=>s.includes(w)) && (!tag || tagsOf(n).includes(tag)) && (!i.para || n.para===i.para) && (!i.type || n.type===i.type); });
-      return sorted(r).slice(0, Math.min(i.limit||20, 50)).map(n => ({id:n.id, title:n.title, type:n.type, para:n.para, tags:tagsOf(n), done:n.done, files:(n.files||[]).length, updated:iso(n.updated), snippet:n.body.slice(0,240)}));
-    }
-    case 'read_note': {
-      const n = byId(i.id); if(!n) return {error:'note not found'};
-      return {...n, tags:tagsOf(n), created:iso(n.created), updated:iso(n.updated), files:(n.files||[]).map(id => ({file_id:id, ...(db.files[id]||{})}))};
-    }
-    case 'create_note': {
-      const n = newNote({title:(i.title||'Untitled').slice(0,200), body:withTags(i.body||'', i.tags), type:valid(i.type,TK,'note'), para:valid(i.para,PK,'inbox'), pinned:!!i.pinned, files:(i.file_ids||[]).filter(id=>db.files[id]), by:'ai'});
-      if(n.type==='journal') n.date = today();
-      ctx.acts.push(`➕ Created [[${n.title}]]`); return {id:n.id, title:n.title};
-    }
-    case 'update_note': {
-      const n = byId(i.id); if(!n) return {error:'note not found'};
-      if(typeof i.title==='string' && i.title.trim()) n.title = i.title;
-      if(typeof i.body==='string') n.body = i.body;
-      if(i.append) n.body = (n.body.trim() ? n.body.trimEnd()+'\n\n' : '') + i.append;
-      if(i.tags) n.body = withTags(n.body, i.tags);
-      if(i.type) n.type = valid(i.type,TK,n.type);
-      if(i.para) n.para = valid(i.para,PK,n.para);
-      if(typeof i.pinned==='boolean') n.pinned = i.pinned;
-      if(typeof i.done==='boolean') n.done = i.done;
-      if(i.file_ids) n.files = [...new Set([...(n.files||[]), ...i.file_ids.filter(id=>db.files[id])])];
-      n.updated = Date.now(); save(); ctx.acts.push(`✏️ Updated [[${n.title}]]`); return {ok:true};
-    }
-    case 'delete_note': {
-      const n = byId(i.id); if(!n) return {error:'note not found'};
-      if(!confirm(`Claude wants to delete "${n.title||'Untitled'}". Allow?`)) return {declined:true, message:'The user did not allow deleting this note.'};
-      removeNote(n); ctx.acts.push(`🗑️ Deleted "${n.title}"`); return {ok:true};
-    }
-    case 'update_memory': { db.memory = String(i.memory||'').slice(0,6000); save(); ctx.acts.push('🧠 Updated what I know about you'); return {ok:true}; }
-    case 'create_file': {
-      const ext = (i.filename.split('.').pop()||'').toLowerCase();
-      const type = {md:'text/markdown',txt:'text/plain',csv:'text/csv',json:'application/json',html:'text/html',htm:'text/html',xml:'application/xml'}[ext] || 'text/plain';
-      const id = await saveFile(new Blob([i.content||''], {type}), i.filename);
-      ctx.files.push(id);
-      const n = i.note_id && byId(i.note_id); if(n){ n.files = [...(n.files||[]), id]; n.updated = Date.now(); save(); }
-      ctx.acts.push(`📄 Created file ${i.filename}`); return {file_id:id};
-    }
-    case 'list_tags': return allTags().map(([tag,count]) => ({tag, count}));
-  }
-  return {error:'unknown tool'};
-}
-
-function normalize(list){
-  const out = [];
-  for(const m of list){ if(!m.content.length) continue; const last = out[out.length-1];
-    if(last && last.role===m.role) last.content = last.content.concat(m.content); else out.push({role:m.role, content:[...m.content]}); }
-  while(out.length && out[0].role!=='user') out.shift();
-  return out;
-}
-async function runAgent(history, content, ctx){
-  const msgs = normalize([...history, {role:'user', content}]);
-  let finalText = '';
-  for(let step=0; step<16; step++){
-    ctx.status(step ? 'Working' : 'Thinking');
-    const res = await callClaude({model:db.settings.model, max_tokens:8000, system:sysPrompt(), tools:TOOLS, messages:msgs});
-    msgs.push({role:'assistant', content:res.content});
-    const txt = res.content.filter(b => b.type==='text').map(b => b.text).join('\n').trim();
-    if(txt) finalText = txt;
-    if(res.stop_reason==='pause_turn') continue;
-    const uses = res.content.filter(b => b.type==='tool_use');
-    if(!uses.length) return finalText || 'Done.';
-    const results = [];
-    for(const u of uses){
-      ctx.status(STATUS[u.name] || 'Working');
-      let out; try{ out = await runTool(u.name, u.input||{}, ctx); }catch(e){ out = {error:e.message}; }
-      results.push({type:'tool_result', tool_use_id:u.id, content:JSON.stringify(out).slice(0,60000)});
-    }
-    msgs.push({role:'user', content:results});
-  }
-  return finalText || 'I stopped after many steps — ask me to continue.';
-}
-
-const EXTRACT = 'Extract ALL useful information from the attached file(s): text, numbers, names, dates, prices, contacts, steps and key points. Save it in my second brain as well-organized note(s) with the files attached, the right folder, type and tags. Then tell me briefly what you saved.';
-async function buildContent(text, att){
-  const c = [];
-  for(const p of att){
-    const fid = p.id ? `file_id ${p.id}` : 'not stored (too large)';
-    if(p.kind==='image'){ c.push({type:'image', source:{type:'base64', media_type:'image/jpeg', data:await b64(p.blob)}}); c.push({type:'text', text:`[Above: image "${p.name}", ${fid}]`}); }
-    else if(p.kind==='pdf'){ c.push({type:'document', source:{type:'base64', media_type:'application/pdf', data:await b64(p.blob)}}); c.push({type:'text', text:`[Above: PDF "${p.name}", ${fid}]`}); }
-    else if(p.kind==='text'){ c.push({type:'text', text:`[File "${p.name}", ${fid}]\n` + (await p.blob.text()).slice(0,150000)}); }
-    else if(p.kind==='video'){
-      try{
-        const {dur, frames} = await videoFrames(p.blob, 8);
-        c.push({type:'text', text:`[Video "${p.name}", ${fid}, ${dur}s long. ${frames.length} frames follow in order. Audio is not included.]`});
-        for(const f of frames){ c.push({type:'text', text:`Frame at ${f.t}s:`}); c.push({type:'image', source:{type:'base64', media_type:'image/jpeg', data:await b64(f.blob)}}); }
-      }catch(e){ c.push({type:'text', text:`[Video "${p.name}" could not be read: ${e.message}]`}); }
-    }
-  }
-  c.push({type:'text', text:text || EXTRACT});
-  return c;
-}
-async function sendChat(text){
-  text = (text||'').trim();
-  if(busy){ toast('Claude is still working…'); return; }
-  if(!text && !pending.length) return;
-  state.view = 'ai'; clearSearch();
-  if(!db.settings.apiKey){ render(); toast('Add your Claude API key first'); act('settings'); return; }
-  busy = true;
-  const att = pending; pending = []; renderPending();
-  const files = [];
-  for(const p of att){ if(p.size <= 80e6){ try{ p.id = await saveFile(p.blob, p.name); files.push(p.id); }catch(e){ toast(e.message); } } }
-  const history = db.chat.filter(m => !m.err && !m.pending && m.text).slice(-12).map(m => ({role:m.role, content:[{type:'text', text:m.text + ((m.files||[]).length && m.role==='user' ? ` [attached: ${m.files.map(id=>(db.files[id]||{}).name).join(', ')}]` : '')}]}));
-  db.chat.push({id:uid(), role:'user', text:text || '📎 Extract & save', files, ts:Date.now()});
-  const bot = {id:uid(), role:'assistant', text:'', acts:[], files:[], pending:true, status:'Thinking', ts:Date.now()};
-  db.chat.push(bot); render();
-  const ctx = {acts:bot.acts, files:bot.files, status:s => { bot.status = s; if(state.view==='ai') render(); }};
-  try{ bot.text = await runAgent(history, await buildContent(text, att), ctx); }
-  catch(e){ bot.text = '⚠️ ' + e.message; bot.err = true; }
-  bot.pending = false; delete bot.status;
-  if(db.chat.length > 300) db.chat = db.chat.slice(-300);
-  busy = false; save(); render();
-}
-
-/* ---------- settings & backup ---------- */
-async function renderSettings(){
-  renderUpdate();
-  $('#sName').value = db.settings.name; $('#sTheme').value = db.settings.theme;
-  $('#sKey').value = db.settings.apiKey; $('#sModel').value = db.settings.model;
-  $('#sMemory').value = db.memory; $('#sLearn').checked = !!db.settings.learn;
-  const le = db.settings.lastExport;
-  $('#sLast').textContent = le ? 'Last backup: ' + new Date(le).toLocaleString() : 'You have never exported a backup.';
-  let used = '';
-  try{ const e = await navigator.storage.estimate(); used = ` · ${(e.usage/1048576).toFixed(1)} MB used of ${(e.quota/1073741824).toFixed(1)} GB`; }catch(e){}
-  $('#sStats').textContent = `${db.notes.length} notes · ${Object.keys(db.files).length} files · ${db.chat.length} chat messages${used}` + (Store.idb ? '' : ' · ⚠️ file storage unavailable in this browser');
-}
-function applyTheme(){ const r=document.documentElement; if(db.settings.theme==='auto') r.removeAttribute('data-theme'); else r.dataset.theme = db.settings.theme; }
-$('#sName').addEventListener('input', e => { db.settings.name = e.target.value.trim() || 'Second Brain'; save(); render(); });
-$('#sTheme').addEventListener('change', e => { db.settings.theme = e.target.value; save(); applyTheme(); Neural.color = null; });
-$('#sKey').addEventListener('change', e => { db.settings.apiKey = e.target.value.trim(); save(); render(); toast(db.settings.apiKey ? 'Key saved' : 'Key removed'); });
-$('#sModel').addEventListener('change', e => { db.settings.model = e.target.value; save(); });
-$('#sMemory').addEventListener('input', e => { db.memory = e.target.value; save(); });
-$('#sAuto').addEventListener('change', e => { db.settings.autoUpdate = e.target.checked; save(); });
-$('#sLearn').addEventListener('change', e => { db.settings.learn = e.target.checked; save(); });
-async function download(name, blob){
-  const P = NATIVE() && window.Capacitor.Plugins;
-  if(P && P.Filesystem && P.Share){
-    try{ const r = await P.Filesystem.writeFile({path:name, data:await b64(blob), directory:'CACHE'}); await P.Share.share({title:name, url:r.uri, dialogTitle:'Save or send ' + name}); }
-    catch(e){ if(!/cancel/i.test(String(e && e.message))) toast('Could not save file: ' + (e && e.message)); }
-    return;
-  }
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
-  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
-}
-async function exportJSON(){
-  toast('Preparing backup…');
-  const files = {};
-  for(const id of Object.keys(db.files)){ const meta = db.files[id]; if(meta.size > 25e6) continue; const b = await Store.getFile(id).catch(()=>null); if(b) files[id] = {...meta, data:await dataURL(b)}; }
-  const out = {app:'second-brain', version:2, exported:Date.now(), notes:db.notes, memory:db.memory, log:db.log, chat:db.chat, settings:{...db.settings, apiKey:''}, files};
-  download(`second-brain-backup-${today()}.json`, new Blob([JSON.stringify(out)], {type:'application/json'}));
-  db.settings.lastExport = Date.now(); save(); render(); renderSettings(); toast('Backup downloaded ✓');
-}
-function exportMD(){
-  const txt = sorted(db.notes).map(n => `# ${n.title||'Untitled'}\n\n_${label(TYPES,n.type)} · ${label(PARA,n.para)} · ${new Date(n.updated).toLocaleString()}_\n\n${n.body}\n`).join('\n---\n\n');
-  download(`second-brain-${today()}.md`, new Blob([txt], {type:'text/markdown'})); toast('Markdown exported ✓');
-}
-$('#file').addEventListener('change', async e => {
-  const f = e.target.files[0]; if(!f) return;
-  try{
-    const d = JSON.parse(await f.text()); if(!Array.isArray(d.notes)) throw 0;
-    let add=0, upd=0, nf=0;
-    for(const [id, meta] of Object.entries(d.files||{})){ if(db.files[id] || !meta.data) continue; try{ const b = await (await fetch(meta.data)).blob(); await Store.putFile(id, b); const {data, ...m} = meta; db.files[id] = m; nf++; }catch(err){} }
-    d.notes.forEach(n => {
-      if(!n || !n.id) return; const ex = byId(n.id);
-      if(!ex){ db.notes.push(Object.assign({title:'',body:'',type:'note',para:'inbox',pinned:false,done:false,files:[],created:Date.now(),updated:Date.now()}, n)); add++; }
-      else if((n.updated||0) > (ex.updated||0)){ Object.assign(ex, n); upd++; }
-    });
-    if(!db.memory && d.memory) db.memory = d.memory;
-    if(!db.chat.length && Array.isArray(d.chat)) db.chat = d.chat;
-    if(!db.log.length && Array.isArray(d.log)) db.log = d.log;
-    save(); render(); renderSettings(); toast(`Imported: ${add} new, ${upd} updated, ${nf} files`);
-  }catch(err){ toast('That is not a valid backup file'); }
-  e.target.value = '';
-});
-
-/* ---------- actions ---------- */
-function clearSearch(){ state.q=''; $('#q').value=''; $('#sbar').hidden=true; }
-async function act(a){
-  if(a==='today'){
-    let n = db.notes.find(n => n.type==='journal' && n.date===today());
-    if(!n) n = newNote({type:'journal', para:'areas', date:today(), title:'Journal ' + today(), body:'## Wins\n- \n\n## Thoughts\n\n\n## Tomorrow\n- [ ] '});
-    openNote(n.id);
-  }
-  else if(a==='new') openNote(newNote({para:paraForView(), type: state.view==='tasks'?'task':'note'}).id);
-  else if(a==='export') exportJSON();
-  else if(a==='md') exportMD();
-  else if(a==='import') $('#file').click();
-  else if(a==='settings'){ renderSettings(); openSheet('settings'); }
-  else if(a==='closeSettings') closeSheet('settings');
-  else if(a==='search'){ const s=$('#sbar'); if(s.hidden){ s.hidden=false; $('#q').focus(); } else { clearSearch(); render(); } }
-  else if(a==='close') closeSheet('editor');
-  else if(a==='toggle'){ editMode=!editMode; showEditor(); if(editMode) $('#eBody').focus(); }
-  else if(a==='pin'){ cur.pinned=!cur.pinned; cur.updated=Date.now(); save(); logAction(`${cur.pinned?'pinned':'unpinned'} "${cur.title}"`); showEditor(); toast(cur.pinned?'Pinned':'Unpinned'); }
-  else if(a==='archive'){ cur.para = cur.para==='archive' ? 'inbox' : 'archive'; cur.updated=Date.now(); save(); logAction(`moved "${cur.title}" to ${cur.para}`); showEditor(); toast(cur.para==='archive'?'Archived':'Moved to Inbox'); }
-  else if(a==='del'){ if(confirm('Delete this note forever?')){ logAction(`deleted "${cur.title}"`); removeNote(cur); cur = null; closeSheet('editor'); toast('Deleted'); } }
-  else if(a==='addFile') $('#noteFile').click();
-  else if(a==='aiNote'){
-    if(!cur) return;
-    const n = cur, urls = ((n.title+' '+n.body).match(/https?:\/\/[^\s)<>]+/g) || []).slice(0,5);
-    const msg = `Organize my note "${n.title||'Untitled'}" (id ${n.id}): read it with its files, clean it up, add a short summary at the top, set the right type, folder and tags, and link related notes.` + (urls.length ? ` Also fetch these links and add their key information: ${urls.join(' ')}` : '');
-    closeSheet('editor'); setTimeout(() => sendChat(msg), 50);
-  }
-  else if(a==='test'){
-    db.settings.apiKey = $('#sKey').value.trim(); save(); toast('Testing…');
-    try{ const r = await callClaude({model:db.settings.model, max_tokens:20, messages:[{role:'user', content:'Reply with just: OK'}]}); toast('✅ Connected to Claude (' + (r.model||db.settings.model) + ')'); }
-    catch(e){ toast('❌ ' + e.message); }
-  }
-  else if(a==='clearChat'){ if(confirm('Clear the whole chat? Notes are not affected.')){ db.chat=[]; save(); render(); renderSettings(); } }
-  else if(a==='checkUpd') checkUpdate(true);
-  else if(a==='restart'){ await flush(); location.reload(); }
-  else if(a==='getApk') openExternal(APK_URL);
-  else if(a==='resetUpd'){ if(confirm('Go back to the version built into this app? Your notes are not affected.')){ await Upd.clear().catch(()=>{}); upd = {}; await flush(); location.reload(); } }
-  else if(a==='clearLog'){ db.log=[]; save(); toast('Action history cleared'); }
-  else if(a==='reset'){ if(prompt('This erases ALL notes, files, chat and memory on this phone. Type DELETE to confirm.')==='DELETE'){ for(const id of Object.keys(db.files)) await Store.delFile(id).catch(()=>{}); db.notes=[]; db.files={}; db.chat=[]; db.log=[]; db.memory=''; save(); renderSettings(); render(); toast('Everything erased'); } }
-}
-
-document.addEventListener('click', e => {
-  const t = e.target;
-  if(t.matches('#ePrev input[type=checkbox]')){ toggleCheck(+t.dataset.i); return; }
-  if(t.matches('.msg input[type=checkbox]')){ e.preventDefault(); return; }
-  const fl = t.closest('[data-filelink]');
-  if(fl && NATIVE()){ e.preventDefault(); const id = fl.dataset.filelink; Store.getFile(id).then(b => b && download((db.files[id]||{}).name || 'file', b)); return; }
-  if(t.matches('img[data-file]') && t.src){ if(!NATIVE()) window.open(t.src, '_blank'); return; }
-  const tick = t.closest('[data-tick]');
-  if(tick){ const n = byId(tick.dataset.tick); n.done = tick.checked; n.updated = Date.now(); save(); logAction(`${n.done?'completed':'reopened'} task "${n.title}"`); render(); if(cur) showEditor(); return; }
-  const un = t.closest('[data-unfile]');
-  if(un){ cur.files = cur.files.filter(id => id!==un.dataset.unfile); cur.updated = Date.now(); save(); showEditor(); return; }
-  const up = t.closest('[data-unpend]');
-  if(up){ pending.splice(+up.dataset.unpend, 1); renderPending(); return; }
-  const ask = t.closest('[data-ask]');
-  if(ask){ sendChat(ask.dataset.ask); return; }
-  const vb = t.closest('[data-view]');
-  if(vb){ state.anim = true; state.view = vb.dataset.view; state.tag = null; clearSearch(); render(); if(state.view!=='ai') scrollTo(0,0); return; }
-  const tg = t.closest('[data-tag]');
-  if(tg){ state.view='tags'; state.tag=tg.dataset.tag; clearSearch(); if($('#editor').classList.contains('open')) closeSheet('editor'); else render(); return; }
-  const wl = t.closest('a.wl');
-  if(wl){ const title = wl.dataset.t; openNote((byTitle(title) || newNote({title})).id); return; }
-  const ac = t.closest('[data-act]');
-  if(ac){ act(ac.dataset.act); return; }
-  const c = t.closest('.card');
-  if(c && !t.closest('a') && !t.closest('video')) openNote(c.dataset.id);
-});
-$('#q').addEventListener('input', e => { state.q = e.target.value.trim(); render(); });
-$('#pick').addEventListener('change', async e => {
-  for(const f of e.target.files){ try{ pending.push(await prepFile(f)); }catch(err){ toast(err.message); } }
-  e.target.value = ''; renderPending();
-  if(pending.length && state.view!=='ai'){ state.view = 'ai'; clearSearch(); render(); }
-  if(pending.length) $('#capIn').focus();
-});
-$('#cap').addEventListener('submit', e => {
-  e.preventDefault();
-  const v = $('#capIn').value.trim();
-  if(state.view==='ai' || pending.length){ if(busy) return toast('Claude is still working…'); $('#capIn').value = ''; sendChat(v); return; }
-  if(!v) return;
-  const type = $('#capType').value, para = paraForView();
-  newNote(v.length > 80 ? {title:v.slice(0,80)+'…', body:v, type, para} : {title:v, type, para});
-  logAction(`captured ${type} "${v.slice(0,60)}" in ${para}`);
-  $('#capIn').value = ''; render(); Neural.pulse(); toast('Captured ✓');
-});
-
-/* ---------- self-update from GitHub ---------- */
+/* ================= self-update from GitHub ================= */
 const Upd = {
   open(){ return new Promise((res,rej) => { const r = indexedDB.open('sb-updater',1); r.onupgradeneeded = () => r.result.createObjectStore('kv'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); },
   async run(mode, fn){ const d = await this.open(); return new Promise((res,rej) => { const t = d.transaction('kv', mode); const q = fn(t.objectStore('kv')); t.oncomplete = () => res(q && q.result); t.onerror = () => rej(t.error); }); },
@@ -882,11 +820,11 @@ const Upd = {
 const newer = (a,b) => { a = String(a).split('.').map(Number); b = String(b).split('.').map(Number); for(let i=0;i<3;i++){ if((a[i]||0)!==(b[i]||0)) return (a[i]||0) > (b[i]||0); } return false; };
 let upd = {};
 async function checkUpdate(manual){
-  if(!navigator.onLine){ if(manual) toast("You're offline — connect to check for updates"); return; }
+  if(!navigator.onLine){ if(manual) toast("You're offline"); return; }
   try{
     if(manual) toast('Checking for updates…');
     const r = await fetch(RAW + 'version.json?t=' + Date.now(), {cache:'no-store'});
-    if(!r.ok) throw new Error('update server answered ' + r.status);
+    if(!r.ok) throw new Error(r.status===404 ? 'update server not reachable (is the GitHub repo public?)' : 'update server answered ' + r.status);
     const v = await r.json(); db.settings.lastCheck = Date.now(); save();
     const shell = window.SB_SHELL || {};
     upd.apk = NATIVE() && v.apk_version && shell.apk && newer(v.apk_version, shell.apk) ? v : null;
@@ -897,96 +835,401 @@ async function checkUpdate(manual){
       const h = await (await fetch(RAW + 'app.html?t=' + Date.now(), {cache:'no-store'})).text();
       if(!h.includes(`APP_VERSION = '${v.version}'`)) throw new Error('the download was incomplete, try again in a few minutes');
       await Upd.put({version:v.version, html:h, at:Date.now()});
-      upd.ready = v; upd.available = null; toast(`✨ Version ${v.version} is ready — tap Restart`);
+      upd.ready = v; upd.available = null; toast(`✨ Version ${v.version} is ready`, 'Restart', () => act('restart'));
     } else upd.available = v;
-    render(); renderUpdate();
+    if(ui.tab==='home') render(); if($('#me').classList.contains('open')) renderMe();
   }catch(e){ if(manual) toast('Update failed: ' + e.message); }
 }
 function updateBanner(){
-  if(upd.ready) return `<div class="banner">✨ <span style="flex:1">Version ${esc(upd.ready.version)} is ready${upd.ready.notes?' — '+esc(upd.ready.notes):''}</span><button class="btn" data-act="restart">Restart</button></div>`;
-  if(upd.available) return `<div class="banner">⬆️ <span style="flex:1">Version ${esc(upd.available.version)} is available</span><button class="btn" data-act="checkUpd">Update</button></div>`;
-  if(upd.apk) return `<div class="banner">📦 <span style="flex:1">A new Android app (APK ${esc(upd.apk.apk_version)}) is available</span><button class="btn" data-act="getApk">Download</button></div>`;
+  if(upd.ready) return `<div class="banner">✨ <span>Version ${esc(upd.ready.version)} is ready${upd.ready.notes?' — '+esc(upd.ready.notes):''}</span><button class="btn sm" data-act="restart">Restart</button></div>`;
+  if(upd.available) return `<div class="banner">⬆️ <span>Version ${esc(upd.available.version)} is available</span><button class="btn sm" data-act="checkUpd">Update</button></div>`;
+  if(upd.apk) return `<div class="banner">📦 <span>New Android app ${esc(upd.apk.apk_version)} available</span><button class="btn sm" data-act="getApk">Get it</button></div>`;
   return '';
 }
-function renderUpdate(){
-  const el = $('#sVer'); if(!el) return;
-  const shell = window.SB_SHELL || {};
-  el.textContent = `Version ${APP_VERSION} · ${NATIVE() ? 'Android app ' + (shell.apk||'') : 'web app'} · ` + (db.settings.lastCheck ? 'last checked ' + ago(db.settings.lastCheck) : 'never checked') + (upd.ready ? ` · ${upd.ready.version} ready, restart to use it` : '');
-  $('#sAuto').checked = !!db.settings.autoUpdate;
-  $('#sAbout').textContent = `Second Brain ${APP_VERSION} · notes work offline · Claude needs internet · github.com/${REPO}`;
-}
-function openExternal(url){ const P = NATIVE() && window.Capacitor.Plugins; if(P && P.Browser) P.Browser.open({url}); else window.open(url, '_blank'); }
 
-/* ---------- 3D: neural sphere, tilt, counters ---------- */
+/* ================= account & settings sheet ================= */
+function renderMe(){
+  const u = Cloud.user(), s = db.settings;
+  let h = `<div class="prof"><div class="avatar">${esc(initial())}<span class="sdot ${syncDotClass()}"></span></div><div><b>${u ? esc(u.email) : 'Guest'}</b><span class="mut" id="syncLine">${syncLine()}</span></div></div>`;
+  if(!u){
+    h += `<div class="panel"><h3 style="margin:0 0 4px">☁️ Cloud sync</h3><p class="mut" style="margin:0 0 10px">Sign in to back up your notes online and use them on any phone or computer. Your notes stay private to your account.</p>
+      <form id="authForm"><input id="aEmail" type="email" placeholder="Email" autocomplete="email" required><div style="height:8px"></div><input id="aPass" type="password" placeholder="Password (6+ characters)" autocomplete="current-password" minlength="6" required>
+      <div class="row"><button class="btn" style="flex:1" type="submit" data-mode="in">Sign in</button><button class="btn g" style="flex:1" type="submit" data-mode="up">Create account</button></div></form>
+      <button class="link" data-act="forgot">Forgot password?</button></div>`;
+  } else {
+    h += `<div class="panel"><div class="row" style="margin:0"><button class="btn" data-act="syncNow">⟳ Sync now</button><button class="btn g" data-act="cloudBackup">☁️ Back up now</button><span style="flex:1"></span><button class="link" data-act="signOut">Sign out</button></div>
+      <label class="sw2" style="border:0;padding-bottom:0">Daily automatic cloud backup<input type="checkbox" id="sAutoBk" ${s.autoBackup?'checked':''}></label>
+      <p class="small" style="margin:6px 0 0">${db.cloud.lastBackup ? 'Last cloud backup ' + ago(db.cloud.lastBackup) + ' · last 14 days are kept' : 'No cloud backup yet'}</p></div>`;
+  }
+  h += `<div class="sec"><h2>Backup</h2></div><div class="panel">
+    <div class="row" style="margin-top:0"><button class="btn" data-act="driveBackup">🟢 Back up to Google Drive</button></div>
+    <p class="small" style="margin:0 0 8px">Opens the share menu — choose <b>Drive</b> to save the backup file in your Google Drive.</p>
+    <div class="row"><button class="btn g sm" data-act="export">💾 Export file</button><button class="btn g sm" data-act="import">📂 Restore</button><button class="btn g sm" data-act="md">📄 Markdown</button></div>
+    <p class="small" style="margin:0">${s.lastExport ? 'Last file backup ' + ago(s.lastExport) : 'No file backup yet'}</p></div>`;
+  h += `<div class="sec"><h2>Appearance</h2></div><div class="panel">
+    <div class="seg" style="margin-bottom:12px">${[['auto','Auto'],['light','Light'],['dark','Dark']].map(([k,l])=>`<button class="${s.theme===k?'on':''}" data-theme="${k}">${l}</button>`).join('')}</div>
+    <div class="swatches">${Object.entries(ACCENTS).map(([k,a])=>`<button class="${s.accent===k?'on':''}" style="--c:${isDark()?a[0]:a[1]}" data-accent="${k}" aria-label="${k}"></button>`).join('')}</div>
+    <div class="optlabel">App name</div><input id="sName" value="${esc(s.name)}" maxlength="40"></div>`;
+  h += `<div class="sec"><h2>Discover</h2></div><div class="panel">
+    <div class="optlabel" style="margin-top:0">Weather city</div><input id="sCity" value="${esc(s.city)}" placeholder="Bangkok">
+    <div class="optlabel">News feeds</div><div class="list-rows">${s.feeds.map((f,i)=>`<div><span><b>${esc(f.name)}</b> <span class="small">${esc(f.url)}</span></span><button class="link" data-delfeed="${i}" style="color:var(--bad)">Remove</button></div>`).join('')}</div>
+    <div class="row"><button class="btn g sm" data-act="addFeed">＋ Add RSS feed</button><button class="link" data-act="resetFeeds">Reset</button></div></div>`;
+  h += `<div class="sec"><h2>Updates</h2></div><div class="panel">
+    <p class="mut" style="margin:0">Version ${APP_VERSION} · ${NATIVE() ? 'Android app ' + ((window.SB_SHELL||{}).apk||'') : 'web app'} · ${s.lastCheck ? 'checked ' + ago(s.lastCheck) : 'never checked'}${upd.ready ? ` · <b>${esc(upd.ready.version)} ready</b>` : ''}</p>
+    <label class="sw2">Download updates automatically<input type="checkbox" id="sAuto" ${s.autoUpdate?'checked':''}></label>
+    <div class="row"><button class="btn" data-act="checkUpd">Check for updates</button>${upd.ready?'<button class="btn g" data-act="restart">Restart now</button>':''}<button class="link" data-act="resetUpd">Use built-in version</button></div></div>`;
+  h += `<div class="sec"><h2>Storage</h2></div><div class="panel"><p class="mut" style="margin:0" id="sStats">${db.notes.length} notes · ${Object.keys(db.files).length} files</p></div>
+    <div class="row" style="margin-top:22px"><button class="btn r sm" data-act="reset">Erase this device</button></div>
+    <p class="small" style="text-align:center;margin-top:20px">${esc(s.name)} ${APP_VERSION} · github.com/${REPO}</p>`;
+  $('#meBody').innerHTML = h;
+  navigator.storage && navigator.storage.estimate && navigator.storage.estimate().then(e => { const el = $('#sStats'); if(el) el.textContent += ` · ${(e.usage/1048576).toFixed(1)} MB used`; }).catch(()=>{});
+}
+
+/* ================= backup ================= */
+function backupData(withFiles){ return {app:'second-brain', version:4, exported:Date.now(), notes:db.notes, settings:{...db.settings}, filesMeta:db.files}; }
+async function backupBlob(){
+  const out = backupData(true), files = {};
+  for(const id of Object.keys(db.files)){ const m = db.files[id]; if(m.size > 25e6) continue; const b = await Store.getFile(id).catch(()=>null); if(b) files[id] = {name:m.name, type:m.type, size:m.size, data:await dataURL(b)}; }
+  out.files = files; return new Blob([JSON.stringify(out)], {type:'application/json'});
+}
+async function exportBackup(title){
+  toast('Preparing backup…');
+  const ok = await shareFile(`second-brain-backup-${today()}.json`, await backupBlob(), title);
+  if(ok){ db.settings.lastExport = Date.now(); save(); if($('#me').classList.contains('open')) renderMe(); }
+}
+async function importBackup(file){
+  try{
+    const d = JSON.parse(await file.text()); if(!Array.isArray(d.notes)) throw 0;
+    let add=0, upd2=0, nf=0;
+    for(const [id, meta] of Object.entries(d.files||{})){ if(db.files[id] || !meta.data) continue; try{ const b = await (await fetch(meta.data)).blob(); await Store.putFile(id, b); db.files[id] = {name:meta.name, type:meta.type, size:meta.size, created:Date.now(), cloud:false}; nf++; }catch(e){} }
+    d.notes.forEach(n => {
+      if(!n || !n.id) return; const ex = byId(n.id);
+      if(!ex){ db.notes.push(Object.assign({title:'',body:'',type:'note',para:'inbox',pinned:false,done:false,files:[],created:Date.now(),updated:Date.now()}, n)); markDirty(n.id); add++; }
+      else if((n.updated||0) > (ex.updated||0)){ Object.assign(ex, n); markDirty(n.id); upd2++; }
+    });
+    save(); render(); Cloud.soon(); toast(`Restored: ${add} new, ${upd2} updated, ${nf} files`);
+  }catch(err){ toast('That is not a valid backup file'); }
+}
+
+/* ================= sheets & navigation ================= */
+function openSheet(id){ const el = $('#'+id); if(!el.classList.contains('open')){ el.classList.add('open'); if(el.classList.contains('sheet')) document.body.classList.add('sheet-open'); try{ history.pushState({sheet:id},''); }catch(e){} } }
+function closeSheet(id){ if(history.state && history.state.sheet===id) history.back(); else onClosed(id); }
+function onClosed(id){
+  const el = $('#'+id); el.classList.remove('open');
+  if(!document.querySelector('.sheet.open')) document.body.classList.remove('sheet-open');
+  if(id==='editor') finishEditor();
+  if(id==='capSheet'){ ui.capFiles = []; }
+  render();
+}
+addEventListener('popstate', () => ['actSheet','capSheet','editor','me'].forEach(id => { if($('#'+id).classList.contains('open')) onClosed(id); }));
+function topOpen(){ return ['actSheet','capSheet','editor','me'].find(id => $('#'+id).classList.contains('open')); }
+
+function actions(title, items){
+  $('#actTitle').textContent = title;
+  $('#actList').innerHTML = items.map((it,i) => `<button data-actidx="${i}" class="${it.danger?'danger':''}"><i>${it.i}</i>${esc(it.l)}</button>`).join('');
+  actions.items = items; openSheet('actSheet');
+}
+function pickFrom(title, opts, fn){ actions(title, opts.map(([k,l,i]) => ({i:i||'•', l, fn:() => fn(k)}))); }
+function noteActions(id){
+  const n = byId(id); if(!n) return;
+  actions(n.title || 'Untitled', [
+    {i:'📖', l:'Open', fn:() => openNote(id)},
+    {i:'📌', l:n.pinned?'Unpin':'Pin', fn:() => { n.pinned = !n.pinned; changed(n); render(); }},
+    {i:'📂', l:'Move to…', fn:() => pickFrom('Move to', PARA.map(p=>[p[0],p[1],p[2]]), k => { n.para = k; changed(n); render(); toast('Moved to ' + PAR[k].l); })},
+    {i:'🏷️', l:'Change type…', fn:() => pickFrom('Type', TYPES.map(t=>[t[0],t[1],t[2]]), k => { n.type = k; changed(n); render(); })},
+    {i:'📤', l:'Share', fn:() => shareText(n.title, (n.title?n.title+'\n\n':'') + n.body)},
+    {i:'⧉', l:'Duplicate', fn:() => { const c = newNote({...JSON.parse(JSON.stringify(n)), id:uid(), title:(n.title||'')+' (copy)', created:Date.now(), updated:Date.now()}); render(); toast('Duplicated', 'Open', () => openNote(c.id)); }},
+    {i:'🗑️', l:'Delete', danger:true, fn:() => deleteWithUndo(n)}
+  ]);
+}
+function deleteWithUndo(n){
+  if(cur===n && $('#editor').classList.contains('open')){ cur = null; onClosed('editor'); }
+  const copy = JSON.parse(JSON.stringify(n)), idx = db.notes.indexOf(n);
+  db.notes = db.notes.filter(x => x!==n); markDirty(n.id); save(); Cloud.soon(); render();
+  toast('Note deleted', 'Undo', () => { copy.updated = Date.now(); db.notes.splice(Math.max(0,idx), 0, copy); markDirty(copy.id); save(); Cloud.soon(); render(); });
+}
+function archiveWithUndo(n){
+  const before = n.para; n.para = n.para==='archive' ? 'inbox' : 'archive'; changed(n); render();
+  toast(n.para==='archive' ? 'Archived' : 'Restored to Inbox', 'Undo', () => { n.para = before; changed(n); render(); });
+}
+
+/* ================= editor ================= */
+function finishEditor(){
+  if(cur && db.notes.includes(cur) && !cur.title.trim() && !cur.body.trim() && !(cur.files||[]).length) removeNote(cur);
+  else if(cur) fetchPreview(cur);
+  save(); cur = null;
+}
+function openNote(id, edit){
+  const n = byId(id); if(!n) return;
+  if(cur && cur!==n) finishEditor();
+  cur = n; n.files = n.files || [];
+  editMode = edit || !n.body.trim();
+  showEditor(); openSheet('editor'); $('#editor .sh-body').scrollTop = 0;
+  if(editMode) setTimeout(() => (n.title ? $('#eBody') : $('#eTitle')).focus(), 80);
+}
+function showEditor(){
+  if(!cur) return;
+  $('#eType').value = cur.type; $('#ePara').value = cur.para;
+  $('#eDue').classList.toggle('hide', cur.type!=='task'); $('#eDue').value = cur.due || '';
+  $('#eTitle').value = cur.title; $('#eBody').value = cur.body;
+  $('#eEdit').classList.toggle('hide', !editMode); $('#ePrev').classList.toggle('hide', editMode); $('#edbar').classList.toggle('hide', !editMode);
+  $('#bTog').textContent = editMode ? '👁️' : '✏️';
+  $('#bPin').style.opacity = cur.pinned ? 1 : .4;
+  if(!editMode) $('#ePrev').innerHTML = `<h1>${esc(cur.title||'Untitled')}</h1>` + (cur.body.trim() ? md(cur.body) : '<p class="mut">Empty note — tap ✏️ to write.</p>');
+  $('#ePreview').innerHTML = previewHTML(cur.preview);
+  $('#eFiles').innerHTML = filesHTML(cur.files, true); hydrate($('#eFiles'));
+  const t = (cur.title||'').trim().toLowerCase();
+  const bl = t ? db.notes.filter(n => n!==cur && (n.body||'').toLowerCase().includes('[['+t+']]')) : [];
+  $('#eBack').innerHTML = bl.length ? `<div class="sec"><h2>Linked from</h2></div>${bl.map((n,i)=>card(n,i)).join('')}` : '';
+  $('#eMeta').textContent = `Created ${new Date(cur.created).toLocaleString()} · edited ${ago(cur.updated)}`;
+}
+['eTitle','eBody'].forEach(id => $('#'+id).addEventListener('input', e => { cur[id==='eTitle'?'title':'body'] = e.target.value; changed(cur); }));
+$('#eType').addEventListener('change', e => { cur.type = e.target.value; changed(cur); showEditor(); });
+$('#ePara').addEventListener('change', e => { cur.para = e.target.value; changed(cur); showEditor(); });
+$('#eDue').addEventListener('change', e => { cur.due = e.target.value; changed(cur); });
+function insertMd(tpl){
+  const ta = $('#eBody'), s = ta.selectionStart, e = ta.selectionEnd, sel = ta.value.slice(s,e);
+  let ins, caret;
+  if(tpl.includes('|')){ const [a,b] = tpl.split('|'); ins = a + sel + b; caret = s + a.length + sel.length; }
+  else if(tpl.endsWith(' ')){ const ls = ta.value.lastIndexOf('\n', s-1) + 1; ta.setRangeText(tpl, ls, ls, 'end'); caret = s + tpl.length; ta.selectionStart = ta.selectionEnd = caret; ta.focus(); cur.body = ta.value; changed(cur); return; }
+  else { ins = tpl + sel; caret = s + ins.length; }
+  ta.setRangeText(ins, s, e, 'end'); ta.selectionStart = ta.selectionEnd = caret; ta.focus(); cur.body = ta.value; changed(cur);
+}
+async function attachTo(n, files){
+  for(const f of files){ try{ n.files.push(await addFile(f)); }catch(err){ toast(err.message); } }
+  changed(n); if(cur===n) showEditor();
+}
+$('#noteFile').addEventListener('change', async e => { if(cur) await attachTo(cur, [...e.target.files]); e.target.value=''; });
+$('#notePhoto').addEventListener('change', async e => { if(cur) await attachTo(cur, [...e.target.files]); e.target.value=''; });
+function toggleCheck(i){ let k=0; cur.body = cur.body.replace(/^(\s*[-*] \[)( |x|X)(\] )/gm,(m,a,b,c)=> k++===i ? a+(b===' '?'x':' ')+c : m); changed(cur); showEditor(); }
+
+/* ================= quick capture ================= */
+function openCapture(o={}){
+  ui.capType = o.type || (ui.tab==='tasks' ? 'task' : 'note');
+  ui.capPara = o.para || (PK.includes(ui.para) && ui.tab==='library' ? ui.para : 'inbox');
+  ui.capDue = o.due ?? (ui.capType==='task' ? '' : '');
+  ui.capFiles = o.files || [];
+  $('#capText').value = o.text || '';
+  paintCapture(); openSheet('capSheet');
+  if(!o.files) setTimeout(() => $('#capText').focus(), 120);
+}
+function paintCapture(){
+  $('#capTypes').innerHTML = TYPES.filter(t=>t[0]!=='journal').map(t => `<button class="chip ${ui.capType===t[0]?'on':''}" data-captype="${t[0]}">${t[2]} ${t[1]}</button>`).join('');
+  $('#capPara').innerHTML = PARA.slice(0,4).map(p => `<button class="chip ${ui.capPara===p[0]?'on':''}" data-cappara="${p[0]}">${p[2]} ${p[1]}</button>`).join('');
+  $('#capTaskOpts').classList.toggle('hide', ui.capType!=='task');
+  const dues = [['','No date'],[today(),'Today'],[addDays(1),'Tomorrow'],[addDays(7),'Next week']];
+  const custom = ui.capDue && !dues.some(d=>d[0]===ui.capDue);
+  $('#capDue').innerHTML = dues.map(([k,l]) => `<button class="chip ${ui.capDue===k?'on':''}" data-capdue="${k}">${l}</button>`).join('') + `<button class="chip ${custom?'on':''}" data-act="capPickDate">📅 ${custom?dueLabel(ui.capDue):'Pick date'}</button>`;
+  $('#capFiles').innerHTML = ui.capFiles.map((f,i) => `<span class="pc">${(f.type||'').startsWith('image/')?'🖼️':'📄'} ${esc((f.name||'file').slice(0,22))}<button data-unpend="${i}" aria-label="Remove">✕</button></span>`).join('');
+}
+async function saveCapture(){
+  const v = $('#capText').value.trim();
+  if(!v && !ui.capFiles.length){ toast('Write something first'); return; }
+  const lines = v.split('\n'), first = lines[0].trim();
+  let title = first.length > 90 ? first.slice(0,90)+'…' : first, body = first.length > 90 ? v : lines.slice(1).join('\n').trim();
+  const url = (v.match(URLRE)||[])[0];
+  if(!title && ui.capFiles.length) title = ((ui.capFiles[0].type||'').startsWith('image/') ? 'Photo · ' : 'File · ') + new Date().toLocaleString(undefined,{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+  let type = ui.capType; if(url && type==='note' && v.trim()===url) type = 'link';
+  if(url && v.trim()===url){ title = url; body = url; }
+  const n = newNote({title, body, type, para:type==='link' && ui.capPara==='inbox' ? 'resources' : ui.capPara, due:type==='task' ? ui.capDue : ''});
+  const files = ui.capFiles; ui.capFiles = [];
+  closeSheet('capSheet'); ui.anim = true;
+  if(files.length) await attachTo(n, files);
+  render(); toast(`${TYPE[type].i} Saved`, 'Open', () => openNote(n.id));
+  fetchPreview(n);
+}
+$('#capPick').addEventListener('change', e => { ui.capFiles.push(...e.target.files); e.target.value=''; paintCapture(); });
+$('#capCam').addEventListener('change', e => { ui.capFiles.push(...e.target.files); e.target.value=''; if(!$('#capSheet').classList.contains('open')) openCapture({type:'note', files:ui.capFiles}); else paintCapture(); });
+$('#capDate').addEventListener('change', e => { ui.capDue = e.target.value; paintCapture(); });
+
+/* ================= actions ================= */
+async function act(a, el){
+  if(a==='capture') openCapture();
+  else if(a==='capSave') saveCapture();
+  else if(a==='closeBs'){ const t = topOpen(); if(t) closeSheet(t); }
+  else if(a==='capPickDate'){ const d = $('#capDate'); d.value = ui.capDue || today(); try{ d.showPicker(); }catch(e){ const v = prompt('Due date (YYYY-MM-DD)', d.value); if(v){ ui.capDue = v; paintCapture(); } } }
+  else if(a==='newTask') openCapture({type:'task', due:today()});
+  else if(a==='newLink') openCapture({type:'link', para:'resources'});
+  else if(a==='scan'){ $('#capCam').click(); }
+  else if(a==='today'){
+    let n = db.notes.find(n => n.type==='journal' && n.date===today());
+    if(!n) n = newNote({type:'journal', para:'areas', date:today(), title:'Journal · ' + new Date().toLocaleDateString(undefined,{weekday:'long', day:'numeric', month:'long'}), body:'## Wins\n- \n\n## Thoughts\n\n\n## Tomorrow\n- [ ] '});
+    openNote(n.id, true);
+  }
+  else if(a==='close') closeSheet('editor');
+  else if(a==='toggle'){ editMode = !editMode; showEditor(); if(editMode) $('#eBody').focus(); }
+  else if(a==='pin'){ cur.pinned = !cur.pinned; changed(cur); showEditor(); toast(cur.pinned?'Pinned':'Unpinned'); }
+  else if(a==='noteMore'){ const id = cur.id; noteActions(id); }
+  else if(a==='addFile') $('#noteFile').click();
+  else if(a==='addPhoto') $('#notePhoto').click();
+  else if(a==='openMe'){ renderMe(); openSheet('me'); }
+  else if(a==='closeMe') closeSheet('me');
+  else if(a==='syncNow'){ await Cloud.sync(true); renderMe(); if(Cloud.state==='ok') toast('✓ Synced'); }
+  else if(a==='cloudBackup'){ await Cloud.autoBackup(true); renderMe(); }
+  else if(a==='signOut'){ if(confirm('Sign out? Your notes stay on this device.')){ Cloud.signOut(); renderMe(); render(); } }
+  else if(a==='forgot'){ const e = ($('#aEmail')||{}).value || prompt('Your email'); if(e){ try{ await Cloud.reset(e.trim()); toast('📧 Check your email for a reset link'); }catch(err){ toast(err.message); } } }
+  else if(a==='driveBackup') exportBackup('Save backup to Google Drive');
+  else if(a==='export') exportBackup();
+  else if(a==='import') $('#importFile').click();
+  else if(a==='md'){ const txt = sorted(db.notes).map(n => `# ${n.title||'Untitled'}\n\n_${TYPE[n.type].l} · ${PAR[n.para].l} · ${new Date(n.updated).toLocaleString()}_\n\n${n.body}\n`).join('\n---\n\n'); shareFile(`second-brain-${today()}.md`, new Blob([txt], {type:'text/markdown'})); }
+  else if(a==='checkUpd') checkUpdate(true);
+  else if(a==='restart'){ await flush(); location.reload(); }
+  else if(a==='getApk') openExternal(APK_URL);
+  else if(a==='resetUpd'){ if(confirm('Go back to the version built into this app? Notes are not affected.')){ await Upd.clear().catch(()=>{}); upd = {}; await flush(); location.reload(); } }
+  else if(a==='reset'){ if(prompt('This erases all notes and files on THIS device (your cloud copy stays). Type DELETE to confirm.')==='DELETE'){ for(const id of Object.keys(db.files)) await Store.delFile(id).catch(()=>{}); db.notes=[]; db.files={}; db.cloud.dirty=[]; db.cloud.lastPull='1970-01-01T00:00:00Z'; save(); renderMe(); render(); toast('This device was erased'); } }
+  else if(a==='setCity'){ const c = prompt('City for weather', db.settings.city); if(c && c.trim()){ db.settings.city = c.trim(); save(); await loadWeather(true); render(); } }
+  else if(a==='fxSwap'){ const F = db.settings.fx; [F.from, F.to] = [F.to, F.from]; save(); render(); }
+  else if(a==='refreshNews'){ toast('Refreshing…'); await refreshDiscover(true); }
+  else if(a==='wikiClear'){ ui.wiki = null; ui.wikiQ = ''; render(); }
+  else if(a==='addFeed'){ const url = prompt('RSS feed address (https://…)'); if(!url) return; const name = prompt('Name for this feed', new URL(url).hostname.replace(/^www\./,'')) || 'Feed'; db.settings.feeds.push({name, url}); save(); renderMe(); }
+  else if(a==='resetFeeds'){ db.settings.feeds = FEEDS.slice(); save(); renderMe(); }
+  else if(a==='clearDone'){ const done = db.notes.filter(n => n.type==='task' && n.done && n.para!=='archive'); done.forEach(n => { n.para = 'archive'; changed(n); }); render(); toast(`Archived ${done.length} tasks`); }
+}
+
+document.addEventListener('click', e => {
+  const t = e.target;
+  if(Date.now() - swipeEnd < 350) { e.preventDefault(); return; }
+  const ai = t.closest('[data-actidx]');
+  if(ai){ const it = actions.items[+ai.dataset.actidx]; closeSheet('actSheet'); setTimeout(() => it.fn(), 60); return; }
+  if(t.matches('#ePrev .tick')){ toggleCheck(+t.dataset.i); return; }
+  const tick = t.closest('[data-tick]');
+  if(tick){ const n = byId(tick.dataset.tick); n.done = tick.checked; changed(n); if(n.done){ toast('✓ Done', 'Undo', () => { n.done = false; changed(n); render(); }); } setTimeout(render, n.done ? 350 : 0); return; }
+  const ext = t.closest('[data-ext]');
+  if(ext && !t.closest('[data-savenews]')){ e.preventDefault(); openExternal(ext.dataset.ext); return; }
+  const sn = t.closest('[data-savenews]');
+  if(sn){ e.preventDefault(); e.stopPropagation(); const feed = db.settings.feeds[ui.newsTab], it = db.cache.news[feed.url].items[+sn.dataset.savenews]; saveLink(it.link, it.title); return; }
+  const g = t.closest('[data-google]'); if(g){ openExternal('https://www.google.com/search?q=' + encodeURIComponent(g.dataset.google)); return; }
+  const tab = t.closest('[data-tab]'); if(tab){ if(ui.tab===tab.dataset.tab) scrollTo({top:0, behavior:'smooth'}); else { ui.tab = tab.dataset.tab; ui.anim = true; render(); scrollTo(0,0); if(ui.tab==='discover') refreshDiscover(); } return; }
+  const go = t.closest('[data-go]'); if(go){ const k = go.dataset.go; ui.anim = true; if(k==='inbox'){ ui.tab = 'library'; ui.para = 'inbox'; } else ui.tab = k; render(); scrollTo(0,0); return; }
+  const ch = t.closest('[data-para]'); if(ch){ ui.para = ch.dataset.para; ui.anim = true; render(); return; }
+  const tg = t.closest('[data-tag]'); if(tg){ const k = tg.dataset.tag; ui.tab = 'library'; ui.tag = ui.tag===k && !t.closest('#editor') ? null : k; ui.anim = true; if(topOpen()==='editor') closeSheet('editor'); else render(); return; }
+  const so = t.closest('[data-sort]'); if(so){ db.settings.sort = so.dataset.sort; save(); render(); return; }
+  const vm = t.closest('[data-viewmode]'); if(vm){ db.settings.view = vm.dataset.viewmode; save(); ui.anim = true; render(); return; }
+  const nw = t.closest('[data-news]'); if(nw){ ui.newsTab = +nw.dataset.news; render(); refreshDiscover(); return; }
+  const ct = t.closest('[data-captype]'); if(ct){ ui.capType = ct.dataset.captype; if(ui.capType==='link' && ui.capPara==='inbox') ui.capPara = 'resources'; paintCapture(); return; }
+  const cp = t.closest('[data-cappara]'); if(cp){ ui.capPara = cp.dataset.cappara; paintCapture(); return; }
+  const cd = t.closest('[data-capdue]'); if(cd){ ui.capDue = cd.dataset.capdue; paintCapture(); return; }
+  const up = t.closest('[data-unpend]'); if(up){ ui.capFiles.splice(+up.dataset.unpend, 1); paintCapture(); return; }
+  const un = t.closest('[data-unfile]'); if(un){ cur.files = cur.files.filter(id => id!==un.dataset.unfile); changed(cur); showEditor(); return; }
+  const th = t.closest('[data-theme]'); if(th){ db.settings.theme = th.dataset.theme; save(); applyTheme(); renderMe(); render(); return; }
+  const ac = t.closest('[data-accent]'); if(ac){ db.settings.accent = ac.dataset.accent; save(); applyTheme(); renderMe(); render(); return; }
+  const df = t.closest('[data-delfeed]'); if(df){ db.settings.feeds.splice(+df.dataset.delfeed, 1); if(!db.settings.feeds.length) db.settings.feeds = FEEDS.slice(); ui.newsTab = 0; save(); renderMe(); return; }
+  const mdb = t.closest('[data-md]'); if(mdb){ e.preventDefault(); insertMd(mdb.dataset.md); return; }
+  const wl = t.closest('a.wl'); if(wl){ const title = wl.dataset.t; openNote((byTitle(title) || newNote({title})).id); return; }
+  const a = t.closest('[data-act]'); if(a){ act(a.dataset.act, a); return; }
+  const fl = t.closest('[data-filelink]'); if(fl && NATIVE()){ e.preventDefault(); const id = fl.dataset.filelink; fileURL(id).then(async u => { if(u){ const b = await (await fetch(u)).blob(); shareFile((db.files[id]||{}).name || 'file', b); } }); return; }
+  const c = t.closest('.card, .mini'); if(c && !t.closest('a') && !t.closest('video')) openNote(c.dataset.id);
+});
+document.addEventListener('contextmenu', e => { const c = e.target.closest('.card'); if(c){ e.preventDefault(); noteActions(c.dataset.id); } });
+document.addEventListener('input', e => {
+  const t = e.target;
+  if(t.id==='libQ'){ ui.q = t.value; const pos = t.selectionStart; render(); const n = $('#libQ'); n.focus(); n.setSelectionRange(pos,pos); }
+  else if(t.id==='fxAmt' || t.id==='fxFrom' || t.id==='fxTo'){ const F = db.settings.fx; F.amt = $('#fxAmt').value; F.from = $('#fxFrom').value; F.to = $('#fxTo').value; save(); const fx = db.cache.fx; if(fx){ const v = (+F.amt||0) / fx.rates[F.from] * fx.rates[F.to]; $('#fxOut').textContent = v.toLocaleString(undefined,{maximumFractionDigits:2}) + ' ' + F.to; } }
+  else if(t.id==='sName'){ db.settings.name = t.value.trim() || 'Second Brain'; document.title = db.settings.name; save(); }
+});
+document.addEventListener('change', e => {
+  const t = e.target;
+  if(t.id==='sAuto'){ db.settings.autoUpdate = t.checked; save(); }
+  else if(t.id==='sAutoBk'){ db.settings.autoBackup = t.checked; save(); }
+  else if(t.id==='sCity'){ db.settings.city = t.value.trim() || 'Bangkok'; save(); loadWeather(true); }
+  else if(t.id==='wikiLang'){ db.settings.wikiLang = t.value; save(); if(ui.wikiQ) runWiki(ui.wikiQ); }
+});
+async function runWiki(q){ ui.wikiQ = q; if(!navigator.onLine){ toast('Search needs internet'); return; } try{ ui.wiki = await wikiSearch(q); }catch(err){ toast('Search failed: ' + err.message); ui.wiki = []; } render(); }
+document.addEventListener('submit', async e => {
+  e.preventDefault();
+  if(e.target.id==='wikiForm'){ const q = $('#wikiQ').value.trim(); if(q) runWiki(q); $('#wikiQ').blur(); }
+  if(e.target.id==='authForm'){
+    const mode = (e.submitter && e.submitter.dataset.mode) || 'in', email = $('#aEmail').value.trim(), pw = $('#aPass').value;
+    const btns = e.target.querySelectorAll('button'); btns.forEach(b => b.disabled = true);
+    try{
+      if(mode==='up'){ const r = await Cloud.signUp(email, pw); if(r==='confirm'){ toast('📧 Check your email and tap the confirmation link, then sign in here'); } else { await Cloud.signIn(email, pw); toast('Welcome! Your notes are syncing'); } }
+      else { await Cloud.signIn(email, pw); toast('✓ Signed in — syncing your notes'); }
+    }catch(err){ toast(/confirm/i.test(err.message) ? 'Please confirm your email first (check your inbox)' : /invalid/i.test(err.message) ? 'Wrong email or password' : err.message); }
+    btns.forEach(b => b.disabled = false); renderMe(); render();
+  }
+});
+$('#importFile').addEventListener('change', e => { const f = e.target.files[0]; if(f) importBackup(f); e.target.value = ''; });
+
+/* ================= swipe & long press ================= */
+let sw = null, swipeEnd = 0, lpT = null;
+document.addEventListener('touchstart', e => {
+  const c = e.target.closest('.sw > .card'); if(!c || e.target.closest('.tick')) return;
+  const p = e.touches[0]; sw = {c, x:p.clientX, y:p.clientY, dx:0, active:false};
+  lpT = setTimeout(() => { if(sw && !sw.active){ const id = sw.c.dataset.id; sw = null; swipeEnd = Date.now() + 400; navigator.vibrate && navigator.vibrate(12); noteActions(id); } }, 500);
+}, {passive:true});
+document.addEventListener('touchmove', e => {
+  if(!sw) return; const p = e.touches[0], dx = p.clientX - sw.x, dy = p.clientY - sw.y;
+  if(!sw.active){
+    if(Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy)*1.4){ sw.active = true; clearTimeout(lpT); sw.c.classList.add('drag'); }
+    else if(Math.abs(dy) > 10 || Math.abs(dx) > 12){ clearTimeout(lpT); sw = null; return; }
+    else return;
+  }
+  e.preventDefault(); sw.dx = dx;
+  sw.c.style.transform = `translateX(${dx}px)`;
+  const w = sw.c.parentNode; w.classList.toggle('swl', dx > 0); w.classList.toggle('swr', dx < 0);
+}, {passive:false});
+document.addEventListener('touchend', () => {
+  clearTimeout(lpT); if(!sw) return;
+  const {c, dx, active} = sw; sw = null; if(!active) return;
+  swipeEnd = Date.now(); c.classList.remove('drag'); c.style.transform = '';
+  setTimeout(() => c.parentNode && c.parentNode.classList.remove('swl','swr'), 300);
+  const n = byId(c.dataset.id); if(!n) return;
+  if(dx > 90){ n.pinned = !n.pinned; changed(n); toast(n.pinned ? '📌 Pinned' : 'Unpinned'); setTimeout(render, 250); }
+  else if(dx < -90){ setTimeout(() => archiveWithUndo(n), 200); }
+});
+
+/* ================= 3D neural sphere ================= */
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
-function greet(){ const h = new Date().getHours(); return h<5 ? 'Late night thinking' : h<12 ? 'Good morning' : h<17 ? 'Good afternoon' : h<22 ? 'Good evening' : 'Good night'; }
 const Neural = {
   c:null, x:null, pts:[], n:0, rx:.35, ry:0, drag:null, pulseT:0, raf:0, color:null, t:0,
   mount(c){
     this.c = c; if(!c) return; this.x = c.getContext('2d');
-    const n = Math.min(150, 46 + db.notes.length*3); if(n!==this.n) this.build(n);
-    this.size(); this.color = null;
+    const n = Math.min(140, 46 + db.notes.length*3); if(n!==this.n) this.build(n);
+    this.size();
     c.onpointerdown = e => { this.drag = {x:e.clientX, y:e.clientY}; };
     c.onpointermove = e => { if(!this.drag) return; const dx = e.clientX-this.drag.x, dy = e.clientY-this.drag.y;
-      if(e.pointerType!=='mouse' && Math.abs(dy) > Math.abs(dx)*1.4) { this.drag = null; return; }
+      if(e.pointerType!=='mouse' && Math.abs(dy) > Math.abs(dx)*1.4){ this.drag = null; return; }
       this.ry += dx*.01; this.rx = Math.max(-1.2, Math.min(1.2, this.rx + dy*.006)); this.drag = {x:e.clientX, y:e.clientY}; };
     c.onpointerup = c.onpointercancel = c.onpointerleave = () => { this.drag = null; };
     if(!this.raf) this.loop();
   },
-  build(n){ this.n = n; this.pts = []; const g = Math.PI*(3-Math.sqrt(5));
-    for(let i=0;i<n;i++){ const y = 1-(i/(n-1))*2, r = Math.sqrt(1-y*y), a = g*i; this.pts.push({x:Math.cos(a)*r, y, z:Math.sin(a)*r, ph:Math.random()*6.28}); } },
+  build(n){ this.n = n; this.pts = []; const g = Math.PI*(3-Math.sqrt(5)); for(let i=0;i<n;i++){ const y = 1-(i/(n-1))*2, r = Math.sqrt(1-y*y), a = g*i; this.pts.push({x:Math.cos(a)*r, y, z:Math.sin(a)*r, ph:Math.random()*6.28}); } },
   size(){ const d = Math.min(devicePixelRatio||1, 2), r = this.c.getBoundingClientRect(); this.w = r.width; this.h = r.height; this.c.width = r.width*d; this.c.height = r.height*d; this.x.setTransform(d,0,0,d,0,0); },
   pulse(){ this.pulseT = 1; },
   loop(){
     this.raf = requestAnimationFrame(() => this.loop());
     const c = this.c; if(!c || !c.isConnected || document.hidden || document.body.classList.contains('sheet-open')) return;
     if(!this.color){ const cs = getComputedStyle(document.documentElement); this.color = cs.getPropertyValue('--acc').trim(); this.warm = cs.getPropertyValue('--warm').trim(); }
-    this.t += .016; if(!this.drag && !REDUCED) this.ry += .0032; this.pulseT *= .95;
-    const x = this.x, w = this.w, h = this.h, cx = w*.73, cy = h*.5, R = Math.min(w*.3, h*.4)*(1+this.pulseT*.12);
+    this.t += .016; if(!this.drag && !REDUCED) this.ry += .003; this.pulseT *= .95;
+    const x = this.x, w = this.w, h = this.h, cx = w*.74, cy = h*.5, R = Math.min(w*.28, h*.4)*(1+this.pulseT*.12);
     const sy = Math.sin(this.ry), cy_ = Math.cos(this.ry), sx = Math.sin(this.rx), cx_ = Math.cos(this.rx);
     x.clearRect(0,0,w,h);
-    const g = x.createRadialGradient(cx,cy,0,cx,cy,R*1.6); g.addColorStop(0, this.color+'33'); g.addColorStop(1, this.color+'00');
-    x.fillStyle = g; x.fillRect(0,0,w,h);
-    const P = this.pts.map(p => { const x1 = p.x*cy_ - p.z*sy, z1 = p.x*sy + p.z*cy_, y1 = p.y*cx_ - z1*sx, z2 = p.y*sx + z1*cx_, s = 2.4/(2.4 - z2);
-      return {X:cx + x1*R*s, Y:cy + y1*R*s, z:z2, s, ph:p.ph, ox:x1, oy:y1}; });
+    const g = x.createRadialGradient(cx,cy,0,cx,cy,R*1.6); g.addColorStop(0, this.color+'33'); g.addColorStop(1, this.color+'00'); x.fillStyle = g; x.fillRect(0,0,w,h);
+    const P = this.pts.map(p => { const x1 = p.x*cy_ - p.z*sy, z1 = p.x*sy + p.z*cy_, y1 = p.y*cx_ - z1*sx, z2 = p.y*sx + z1*cx_, s = 2.4/(2.4 - z2); return {X:cx + x1*R*s, Y:cy + y1*R*s, z:z2, s, ph:p.ph, ox:x1, oy:y1}; });
     x.lineWidth = .7; x.strokeStyle = this.color;
-    for(let i=0;i<P.length;i++) for(let j=i+1;j<P.length;j++){
-      const a = P[i], b = P[j], dx = a.ox-b.ox, dy = a.oy-b.oy, dz = a.z-b.z, d2 = dx*dx+dy*dy+dz*dz;
-      if(d2 < .2){ x.globalAlpha = (1 - d2/.2) * (.08 + (a.z+b.z+2)*.09); x.beginPath(); x.moveTo(a.X,a.Y); x.lineTo(b.X,b.Y); x.stroke(); }
-    }
-    for(const p of P){
-      const fire = Math.max(0, Math.sin(this.t*1.3 + p.ph*3)) ** 12, depth = (p.z+1)/2;
-      x.globalAlpha = .25 + depth*.6 + fire*.4; x.fillStyle = fire > .5 ? this.warm : this.color;
-      x.beginPath(); x.arc(p.X, p.Y, (.8 + depth*1.6 + fire*2.2) * p.s, 0, 6.283); x.fill();
-    }
+    for(let i=0;i<P.length;i++) for(let j=i+1;j<P.length;j++){ const a = P[i], b = P[j], dx = a.ox-b.ox, dy = a.oy-b.oy, dz = a.z-b.z, d2 = dx*dx+dy*dy+dz*dz; if(d2 < .2){ x.globalAlpha = (1 - d2/.2) * (.08 + (a.z+b.z+2)*.09); x.beginPath(); x.moveTo(a.X,a.Y); x.lineTo(b.X,b.Y); x.stroke(); } }
+    for(const p of P){ const fire = Math.max(0, Math.sin(this.t*1.3 + p.ph*3)) ** 12, depth = (p.z+1)/2; x.globalAlpha = .25 + depth*.6 + fire*.4; x.fillStyle = fire > .5 ? this.warm : this.color; x.beginPath(); x.arc(p.X, p.Y, (.8 + depth*1.6 + fire*2.2) * p.s, 0, 6.283); x.fill(); }
     x.globalAlpha = 1;
   }
 };
 addEventListener('resize', () => { if(Neural.c && Neural.c.isConnected) Neural.size(); });
-function countUp(){ if(REDUCED) return; document.querySelectorAll('[data-count]').forEach(el => { const to = +el.dataset.count; if(!to) return; const t0 = performance.now();
-  const step = now => { const k = Math.min(1, (now-t0)/700), e = 1-Math.pow(1-k,3); el.textContent = Math.round(to*e); if(k<1) requestAnimationFrame(step); }; requestAnimationFrame(step); }); }
-document.addEventListener('pointermove', e => {
-  if(e.pointerType!=='mouse' || REDUCED) return;
-  const el = e.target.closest && e.target.closest('.tilt'); document.querySelectorAll('.tilt.tilting').forEach(o => { if(o!==el){ o.classList.remove('tilting'); o.style.transform = ''; } });
-  if(!el) return; const r = el.getBoundingClientRect(), px = (e.clientX-r.left)/r.width - .5, py = (e.clientY-r.top)/r.height - .5;
-  const k = el.classList.contains('hero') ? 4 : 7;
-  el.classList.add('tilting'); el.style.transform = `perspective(900px) rotateX(${(-py*k).toFixed(2)}deg) rotateY(${(px*k).toFixed(2)}deg) translateZ(4px)`;
-});
 
-/* ---------- init ---------- */
-$('#capType').innerHTML = TYPES.filter(t=>t[0]!=='journal').map(([k,l]) => `<option value="${k}">${l.split(' ')[0]}</option>`).join('');
-$('#eType').innerHTML = TYPES.map(([k,l]) => `<option value="${k}">${l}</option>`).join('');
-$('#ePara').innerHTML = PARA.map(([k,l]) => `<option value="${k}">${l}</option>`).join('');
+/* ================= init ================= */
+$('#eType').innerHTML = TYPES.map(t => `<option value="${t[0]}">${t[2]} ${t[1]}</option>`).join('');
+$('#ePara').innerHTML = PARA.map(p => `<option value="${p[0]}">${p[2]} ${p[1]}</option>`).join('');
 (async () => {
   await load();
   if(!db.settings.init){
-    newNote({pinned:true, para:'resources', title:'Welcome to your second brain 🧠', body:
-'## How it works\n- Capture anything fast in the bar at the bottom\n- Sort it later: Inbox → Projects, Areas, Resources, Archive\n- Add #tags anywhere, like #business #ideas\n- Link notes with [[My ideas]] — tap the link to create that note\n- Tap 📔 Today\'s journal for a daily page\n\n## 🤖 Claude\n- Open the 🤖 Claude tab and add your API key in ⚙️\n- Ask questions about your notes, or tell Claude what to save\n- Tap 📎 to add photos, videos, PDFs or files — Claude extracts everything into organized notes\n- Paste a link and Claude reads the page\n- Tap ✨ inside any note to let Claude clean it up\n\n## Checklists\n- [ ] Tap this box to tick it\n- [x] Open this note\n\n## Backup\nEverything stays on this phone. Open ⚙️ and **export a backup** every week.'});
+    newNote({id:'welcome', pinned:true, para:'resources', title:'Welcome to your second brain 🧠', body:
+'## Quick start\n- Tap **＋** to capture anything: a note, task, idea, link or photo\n- **Notes** tab: search, filter by folder or tag, list or grid view\n- Swipe a note **right** to pin, **left** to archive, long-press for more\n- **Tasks** tab: due dates, today, overdue\n- **Discover**: weather, currency, news and Wikipedia search\n- Link notes with [[My ideas]] and add tags by typing # before a word, like #ideas\n\n## Your data\n- Works fully offline on this phone\n- Tap your avatar (top right) to sign in — notes sync to the cloud and back up every day\n- Back up to Google Drive any time from the same screen\n\n## Checklists\n- [ ] Tap to tick\n- [x] Open this note'});
     db.settings.init = 1; save();
   }
-  applyTheme(); render();
-  if(db.settings.autoUpdate && Date.now() - (db.settings.lastCheck||0) > 3*3600e3) setTimeout(() => checkUpdate(false), 2500);
+  applyTheme(); document.title = db.settings.name; render();
   if(navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(()=>{});
+  if(Cloud.on()) Cloud.sync();
+  loadWeather().then(() => { if(ui.tab==='home' || ui.tab==='discover') render(); });
+  loadFX();
+  if(db.settings.autoUpdate && Date.now() - (db.settings.lastCheck||0) > 3*3600e3) setTimeout(() => checkUpdate(false), 3000);
 })();
 </script>
 </body>

@@ -1,11 +1,15 @@
 # Second Brain 🧠
 
-A personal second-brain app with Claude AI built in: notes, tasks, journal, tags, linked notes, files (photos, videos, PDFs), and an AI that organizes, extracts and remembers. Data stays on your device and works offline.
+A personal second-brain app: notes, tasks with due dates, daily journal, tags, linked notes, photos and files, plus a Discover tab with weather, currency, news and Wikipedia search. Works offline, syncs to the cloud when you sign in, and backs up daily.
 
 ## Install
 
 - **Android app:** download [second-brain.apk](https://github.com/khalil203/second-brain/raw/main/dist/second-brain.apk) and open it (allow "Install unknown apps" for your browser when asked).
 - **Web app:** open https://khalil203.github.io/second-brain/ in Chrome, then menu ⋮ → **Install app**.
+
+## Cloud
+
+Sign-in, sync and daily backups use a Supabase project (`kshhznqxudcaipizpxvv`, Singapore). Each account can only read its own notes and files (row-level security). The `web` edge function powers link previews and news feeds.
 
 ## Updates
 
